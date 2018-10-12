@@ -5,8 +5,8 @@ class Entity:
         self.inventory = []
         self.actions = actions
         if stats == {}:
-            self.stats  ={"Level":0,"Strength":0,"Perception":0,"Endurance":0,
-                          "Charisma":0,"Intelligence":0,"Agility":0,"Luck":0}
+            self.stats  ={"level":0,"strength":0,"perception":0,"endurance":0,
+                          "charisma":0,"intelligence":0,"agility":0,"luck":0}
         else:
             self.stats = stats
 

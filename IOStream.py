@@ -7,5 +7,3 @@ class IOStream(object):
 
     def send_in(self):
         return input("> ")
-
-#TEST

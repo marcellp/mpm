@@ -5,5 +5,5 @@ class IOStream(object):
     def out(self, string):
         print(string)
 
-    def send_in(self):
-        return input("> ")
+    def send_in(self, prompt = "> "):
+        return input(prompt)

@@ -1,18 +1,18 @@
 class Entity:
 
-    def __init__(self,actions={},stats={},inventory=[]):
+    MAX_SPECIAL_POINTS = 40
 
+    def __init__(self, sex, stats = None):
         self.inventory = []
-        self.actions = actions
-        if stats == {}:
-            self.stats  ={"level":0,"strength":0,"perception":0,"endurance":0,
-                          "charisma":0,"intelligence":0,"agility":0,"luck":0}
+        self.actions = {}
+        self.sex = None
+        self.at = None
+
+        if stats:
+            self.stats  ={"level":1,"strength":5,"perception":5,"endurance":5,
+                          "charisma":5,"intelligence":5,"agility":5,"luck":5}
         else:
-            self.stats = stats
-
-        if actions == {}:
-            self.actions = {}
-
+            self.stats = {}
 
     def print_stats(self):
         """print the state of the entity"""

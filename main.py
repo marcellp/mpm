@@ -1,5 +1,6 @@
-from IOStream import IOStream
+from IOStream import io
 from Room import Room
+from Entity import Entity
 import pickle
 
 class Game(object):
@@ -22,18 +23,90 @@ class Game(object):
 			pickle.dump(self.rooms, rooms)
 
 	def debug(self):
-		self.rooms = [Room("Dark room")]
+		r = Room("Dark room")
+		r.paths["up"] = True
+		r.paths["down"] = True
+
+		self.rooms = [r]
 		self.save_rooms()
 
-	def run(self):
-		io = IOStream()
-
-		io.out("mpm version 1 loaded")
+	def create_character(self):
+		while True:
+			name = io.send_in('By what name should I call you? > ').strip()
+			if name:
+				break
 
 		while True:
-			self.rooms[0].describe()
+			sex = io.send_in("Okay, " + name + ", what is your sex? (male, female) > ").strip()
+
+			if sex == "male" or sex == "female":
+				break
+
+		p = Entity(name, sex)
+		io.out("Good job, {}. To create your character, assign some skills to your character.\n".format(name))
+		
+		"""
+		Here be dragons.
+		"""
+		while True:
+			assignable_points = Entity.MAX_SPECIAL_POINTS
+			total_points = 0
+			i = 1
+			out_of = len(p.stats) - 1
+
+			for stat in p.stats.keys():
+				if stat == "level":
+					continue
+
+				while True:
+					try:
+						points = io.send_in("[{}/{}] Assign points for {} (default: 5, minimum: 1, maximum: 10 {}/{} assigned). > ".format(i, out_of, stat.upper(), total_points, assignable_points))
+						points = int(points)
+					except ValueError:
+						io.out("I'll take that as 5.")
+						points = 5
+
+					if points < 1 or points > 10:
+						io.out('Points must be between 1 and 10.')
+						continue
+
+					if total_points == assignable_points and i <= out_of:
+						break
+
+					if total_points + points > assignable_points:
+						io.out('You cannot assign this many points.')
+						continue
+
+					p.stats[stat] = points
+					total_points += points
+					i += 1
+					break
+
+				if total_points == assignable_points and i <= out_of:
+					io.out('You used up your points a bit too fast there. Let us try again....\n')
+					break
+
+			if i > out_of:
+				break
+
+		# Character stats created, let us put the character into the first available room.
+		p.at = self.rooms[0]
+
+		return p
+
+
+	def run(self):
+		
+		io.out("mpm version 1 loaded\n")
+		self.p = self.create_character()
+		io.out('')
+
+		# Game loop
+		while True:
+			self.p.at.describe()
 			io.send_in()
 
 
 g = Game()
+#g.debug()
 g.run()

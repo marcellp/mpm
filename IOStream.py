@@ -7,3 +7,5 @@ class IOStream(object):
 
     def send_in(self, prompt = "> "):
         return input(prompt)
+
+io = IOStream()

@@ -24,7 +24,7 @@ class Entity(object):
 
         self.clothes = {x:None for x in self.body_parts}
 
-        self.use_context = {Item_type.food:self.eat,Item_type.wearable:self.equip}
+        #self.use_context = {Item_type.food:self.eat,Item_type.wearable:self.equip}
 
     def use_item(self,index):
         item = self.inventory.pop(index)

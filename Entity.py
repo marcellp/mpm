@@ -63,11 +63,11 @@ class Entity(object):
         else returns none"""
 
         try:
-            item = self.inventory[itemid]
+            item = self.inventory[index]
         except IndexError:
             return None
 
-        self.inventory[itemid] = None
+        self.inventory[index] = None
         return item
 
     def get_stat(self, key):

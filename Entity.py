@@ -43,12 +43,6 @@ class Entity(object):
     def use_item(self,index):
         item = self.inventory.pop(index)
 
-    def get_hp(self):
-        return 90 + (self.get_stat("endurance") * 20) + (self.level * 10)
-
-    def get_stamina(self):
-        return 5 + floor(self.get_stat("agility") / 2)
-
     def add_item(self,item):
         """adds the item to the players inventory if it is an item"""
 
@@ -57,6 +51,9 @@ class Entity(object):
             return True
         else:
             return False
+
+    def get_hp(self):
+        raise NameError('HP not implemented for this class.')
 
     def remove_item(self, index):
         """returns the item if the player has it
@@ -146,6 +143,12 @@ class Human(Entity):
 
         self.name = name
         self.sex = sex
+
+    def get_hp(self):
+        return 90 + (self.get_stat("endurance") * 20) + (self.level * 10)
+
+    def get_stamina(self):
+        return 5 + floor(self.get_stat("agility") / 2)
 
     def show_inventory(self):
         if not self.local_player:

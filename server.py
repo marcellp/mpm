@@ -1,4 +1,4 @@
-import sys, socket, threading, time
+import sys, socket, threading
 
 sv_addr = "127.0.0.1"
 sv_port = 50000

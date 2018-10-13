@@ -1,7 +1,7 @@
 from IOStream import io
 from Room import Room
 from Entity import Entity, Human
-from Item import Item,Weapon
+from Item import Item,Weapon,Clothing
 from Parser import Parser
 import json
 import pickle
@@ -115,9 +115,11 @@ class Game(object):
 		"""read from json file parse to tuples as types, copy into rooms from here"""
 		with open("weapons.json") as f:
 			raw_file_data = json.load(f)
-		print(raw_file_data)
-		weapons = tuple(Weapon(x) for x in raw_file_data)
-		print(weapons)
+		self.weapons = tuple(Weapon(x) for x in raw_file_data)
+
+		with open("clothing.json") as f:
+			raw_file_data = json.load(f)
+		self.clothing = tuple(Clothing(x) for x in raw_file_data)
 
 	def run(self):
 		io.out("mpm version 1 loaded\n")

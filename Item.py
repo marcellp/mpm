@@ -5,7 +5,7 @@ class Item(object):
 
     def __init__(self, name, desc = None, value = 0, weight = 0, container = False):
         self.name = name
-
+        self.attributes = None
         if desc:
         	self.desc = desc
         else:
@@ -30,6 +30,10 @@ class Item(object):
               "\n\tDescription: ",self.desc,
               "\n\tValue: ",self.value,
               "\n\tWeight: ",self.weight,)
+        if self.attributes:
+
+            for attr in self.attributes:
+                print("\t", attr, ": ", self.attributes[attr])
 
 class Weapon(Item):
     #structure as in the json in main
@@ -41,9 +45,13 @@ class Weapon(Item):
         #assign actual weapon properties in here
         self.attributes = weaponJson["attributes"]
 
-    def describe(self):
-        Item.describe(self)
-        print("Attributes:")
-        for attr in self.attributes:
-            print("\t",attr,": ",self.attributes[attr])
 
+
+class Clothing(Item):
+    def __init__(self,clothingJson):
+
+        #for inherited attributes
+        Item.__init__(self,clothingJson["name"],clothingJson["desc"],
+                      clothingJson["value"],clothingJson["weight"])
+        #assign actual weapon properties in here
+        self.attributes = clothingJson["attributes"]

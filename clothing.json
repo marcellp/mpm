@@ -7,7 +7,7 @@
     "attributes": {
       "dr": 20,
       "health": 200,
-      "durability": 1221,
+      "durability": 1221
     }
   },
   {
@@ -18,7 +18,7 @@
     "attributes": {
       "dr": 10,
       "health": 100,
-      "durability": 487,
+      "durability": 487
     }
   },
   {
@@ -29,7 +29,7 @@
     "attributes": {
       "dr": 8,
       "health": 100,
-      "durability": 291,
+      "durability": 291
     }
-  },
+  }
 ]

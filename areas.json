@@ -6,7 +6,7 @@
 		"items" : ["scalpel", "face_mask", "lab_coat"],
 		"entities" : [],
 		"exits" : {
-			"door" : "corridor",
+			"door" : "corridor"
 		}
 	},
 	{
@@ -18,7 +18,7 @@
 		"exits" : {
 			"morgue_door" : "morgue",
 			"window" : "rooftop",
-			"far_door" : "stairwell_top",
+			"far_door" : "stairwell_top"
 		}
 	},
 	{
@@ -28,7 +28,7 @@
 		"items" : ["pipe"],
 		"entities" : [],
 		"exits" : {
-			"window" : "corridor",
+			"window" : "corridor"
 		}
 	},
 	{
@@ -40,7 +40,7 @@
 		"exits" : {
 			"corridor_door" : "corridor",
 			"elevator_shaft_ladder" : "basement",
-			"stairs" : "ground floor",
+			"stairs" : "ground floor"
 		}
 	},
 	{
@@ -52,5 +52,5 @@
 		"exits" : {
 			
 		}
-	},
+	}
 ]

@@ -119,11 +119,15 @@ class Parser(object):
 		if action:
 			item = player.remove_item(index)
 
+			print("we are removing", item)
+
 			if not item:
 				io.out('That is not a valid item.')
 				return False
 
+
 			room.add_item(item)
+
 			io.out('You have successfully dropped {} in {}.'.format(item, room))
 
 		if not action:

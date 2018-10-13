@@ -59,9 +59,12 @@ class Room(object):
 			io.out('There are no items in the room.')
 			return False
 		else:
-			output = ["There is a(n)"]
-			for i,thing in enumerate(self.items):
-				output.append(thing.name+"("+str(i)+")")
+			output = ["You can see"]
+			for i, thing in enumerate(self.items):
+				thing_object = thing[0]
+				thing_amount = thing[1]
+
+				output.append(str(thing_amount) + " " + thing_object.name+"("+str(i)+")")
 
 			output.append("in this room.")
 
@@ -100,10 +103,44 @@ class Room(object):
 	def __str__(self):
 		return self.name
 
-	def add_item(self, item):
+	def add_item(self, item, amount = 1):
+		"""adds the item to the players inventory if it is an item"""
 
-		if isinstance(item,Item):
-			self.items.append(item)
-			return True
-		else:
+		if not isinstance(item,Item):
 			return False
+
+		amount_updated = False
+
+		for i, slot in enumerate(self.items):
+			slot_item = slot[0]
+			slot_amount = slot[1]
+
+			if item != slot_item:
+				continue
+
+			slot_amount += amount
+
+			amount_updated = True
+			break
+
+		if not amount_updated:
+			self.items.append([item, amount])
+
+		return True
+
+	def remove_item(self, index):
+		"""returns the item if the player has it
+		else returns none"""
+
+		try:
+			item, amount = self.items[index]
+		except IndexError:
+			return None
+
+		if amount == 1:
+			del self.items[index]
+			return item
+		else:
+			self.items[index][1] -= 1
+			return copy.deepcopy(item)
+		

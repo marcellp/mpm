@@ -5,6 +5,7 @@
     "value": 105,
     "weight": 10,
     "attributes": {
+      "part":"torso",
       "dr": 20,
       "health": 200,
       "durability": 1221
@@ -16,6 +17,7 @@
     "value": 48,
     "weight": 2,
     "attributes": {
+      "part":"head",
       "dr": 10,
       "health": 100,
       "durability": 487
@@ -27,6 +29,7 @@
     "value": 15,
     "weight": 3,
     "attributes": {
+      "part":"torso",
       "dr": 8,
       "health": 100,
       "durability": 291

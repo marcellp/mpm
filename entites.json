@@ -1,15 +1,9 @@
+
 [
-
-
-
-
-
-
-
-
-
-
-
-
-
+  {
+    "name":"bandit",
+    "hp":50,
+    "stamina":50,
+    "inventory":["Baseball bat"]
+  }
 ]

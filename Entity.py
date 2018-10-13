@@ -4,22 +4,12 @@ from IOStream import io
 
 class Entity(object):
     MAX_SPECIAL_POINTS = 40
-    DEFAULT_BODY_PARTS = ("head", "chest", "legs", "shoes")
+    DEFAULT_BODY_PARTS = ("head", "torso","left leg", "right leg", "right arm","left arms")
     DEFAULT_SKILLS = {  "barter": "charisma", "lockpick": "perception", "medicine": "intelligence",
                         "meelee": "strength", "sneak": "agility", "speech": "charisma", "unarmed": "endurance"}
 
-    def __init__(self, stats = None, level = 1, local_player = False, body_parts = None):
+    def __init__(self, level = 1, local_player = False, body_parts = None):
         self.alive = True
-
-        self.attributes = {}
-
-        if stats:
-            self.stats = stats
-        else:
-            self.stats  =   {"level":1,"strength":0,"perception":0,"endurance":0,
-                            "charisma":0,"intelligence":0,"agility":0,"luck":0}
-
-        self.skills = {x : 0 for x in Entity.DEFAULT_SKILLS.keys()}
 
         self.level = level
         self.xp = 0
@@ -36,7 +26,7 @@ class Entity(object):
         else:
             self.body_parts = Entity.DEFAULT_BODY_PARTS
 
-        self.clothes = {x:None for x in self.body_parts}
+        self.equipped = {x:None for x in self.body_parts}
 
         #self.use_context = {Item_type.food:self.eat,Item_type.wearable:self.equip}
 
@@ -131,7 +121,7 @@ class Entity(object):
         pass
 
 class Human(Entity):
-    def __init__(self, name, sex, local_player = False, stats = None):
+    def __init__(self, name, sex, local_player = False, stats = None,skills=None):
 
         if not stats:
             self.stats  =   {"level":1,"strength":5,"perception":5,"endurance":5,
@@ -139,7 +129,13 @@ class Human(Entity):
         else:
             self.stats = stats
 
-        Entity.__init__(self, stats = self.stats, local_player = local_player)
+
+        if not skills:
+            self.skills = {x:0 for x in Entity.DEFAULT_SKILLS.keys()}
+        else:
+            self.skills = skills
+
+        Entity.__init__(self, local_player = local_player)
 
         self.name = name
         self.sex = sex
@@ -187,6 +183,17 @@ class Human(Entity):
             io.out('{:<16}{}'.format(skill.upper(), self.get_skill(skill)))
 
 
-##continue test on player, coalesce with entity
-#test = Player({"endurence":0,"agility":0},"thing")
-#test.add_xp(1000)
+
+class Creature(Entity):
+
+    def __init__(self,hp,stamina):
+        Entity.__init__(self)
+        self.hp = hp
+        self.stamina = stamina
+        pass
+
+    def get_hp(self):
+        return self.hp
+
+    def get_stamina(self):
+        return self.stamina

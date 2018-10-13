@@ -1,6 +1,6 @@
 from IOStream import io
 from Room import Room
-from Entity import Entity, Human
+from Entity import Entity, Human, Creature
 from Item import Item, Weapon, Clothing
 from Parser import Parser
 import json
@@ -61,7 +61,7 @@ class Game(object):
             raw_file_data = json.load(f)
 
         for entity in raw_file_data:
-            temp = Entity(name = entity["name"])
+            temp = Creature(name = entity["name"], hp = entity["hp"], ap = entity["stamina"])
             for item in entity["inventory"]:
                 temp.add_item(self.get_item(item))
             temp.equipped = entity["equipped"]

@@ -247,8 +247,8 @@ class Human(Entity):
 
 
 class Creature(Entity):
-	def __init__(self,hp,ap):
-		Entity.__init__(self)
+	def __init__(self, hp, ap, name = None):
+		Entity.__init__(self, name = name)
 		self.hp = hp
 		self.ap = ap
 		pass

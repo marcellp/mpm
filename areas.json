@@ -1,0 +1,56 @@
+[	
+	{
+		"name" : "morgue",
+		"desc" : "You wake up in a cold room, illuminated only by a red flashing light above a door. You can hear an alarm, steadily growing louder as you come to your senses. You sit upright and realise, to your horror, that the place you woke up appears to be a morgue. You've been stripped of your clothes, but you see a labcoat and face mask lying on the floor by the door. As you begin to stand, pain shoots up your leg. You look down and realise you've stepped on a scalpel. Cursing your luck, you make your way towards the door.",
+		"interior" : true,
+		"items" : ["scalpel", "face_mask", "lab_coat"],
+		"entities" : [],
+		"exits" : {
+			"door" : "corridor",
+		}
+	},
+	{
+		"name" : "corridor",
+		"desc" : "You leave the morgue and find yourself in a long corridor. There is a window to your left and a door at the far end, however a strange-looking man blocks your way to the door. His back is turned, and he doesn't seem to have seen you yet.",
+		"interior" : true,
+		"items" : [],
+		"entities" : ["scavenger"],
+		"exits" : {
+			"morgue_door" : "morgue",
+			"window" : "rooftop",
+			"far_door" : "stairwell_top",
+		}
+	},
+	{
+		"name" : "rooftop",
+		"desc" : "You open the window and jump out. You find yourself on a rooftop maintenance area. The harsh sunlight hits your face. The sensation is unpleasant, burning even. You decide to stick to the shade. You see a toolbox and a length of pipe in a corner. The toolbox is filled with screws and drill bits, but the pipe is about as long as your forearm - it could be used as a tool... or a weapon.",
+		"interior" : false,
+		"items" : ["pipe"],
+		"entities" : [],
+		"exits" : {
+			"window" : "corridor",
+		}
+	},
+	{
+		"name" : "stairwell_top",
+		"desc" : "You find yourself at the top of a stairwell. The door slams behind you a little louder than you planned... There is an elevator next to the stairs, but the door has been forced open, and now leads into an empty elevator shaft. There is a ladder on the far side of the shaft, leading down, but it doesn't look very safe.",
+		"interior" : true,
+		"items" : [],
+		"entities" : [],
+		"exits" : {
+			"corridor_door" : "corridor",
+			"elevator_shaft_ladder" : "basement",
+			"stairs" : "ground floor",
+		}
+	},
+	{
+		"name" : "template",
+		"desc" : "",
+		"interior" : true,
+		"items" : [],
+		"entities" : [],
+		"exits" : {
+			
+		}
+	},
+]

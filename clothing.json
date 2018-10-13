@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Kevlar vest",
+    "desc": "Somewhat stab-proof",
+    "value": 105,
+    "weight": 10,
+    "attributes": {
+      "dr": 20,
+      "health": 200,
+      "durability": 1221,
+    }
+  },
+  {
+    "name": "Bicycle helmet",
+    "desc": "Protects from cycling accidents and the occasional clobbering",
+    "value": 48,
+    "weight": 2,
+    "attributes": {
+      "dr": 10,
+      "health": 100,
+      "durability": 487,
+    }
+  },
+  {
+    "name": "Lab coat",
+    "desc": "Wearing this makes you feel smart. Sadly, it doesn't actually seem to increase intelligence.",
+    "value": 15,
+    "weight": 3,
+    "attributes": {
+      "dr": 8,
+      "health": 100,
+      "durability": 291,
+    }
+  },
+]

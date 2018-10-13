@@ -1,13 +1,16 @@
 from IOStream import io
 from Room import Room
 from Entity import Entity
+from Player import Player
+from Item import Item
+from Parser import Parser
 import pickle
 
 class Game(object):
 
 	def __init__(self):
 		self.rooms = self.load_rooms()
-		pass
+		self.parser = Parser(self)
 
 	def load_rooms(self):
 		with open("rooms.bin", "rb") as rooms:
@@ -42,7 +45,7 @@ class Game(object):
 			if sex == "male" or sex == "female":
 				break
 
-		p = Entity(name, sex)
+		p = Player(name, sex)
 		io.out("Good job, {}. To create your character, assign some skills to your character.\n".format(name))
 		
 		"""
@@ -96,17 +99,31 @@ class Game(object):
 
 
 	def run(self):
-		
 		io.out("mpm version 1 loaded\n")
 		self.p = self.create_character()
+		i = Item("Cola","Delicious diabetes-inducing beverage", 0.1, None)
+		self.p.add_item(i)
+
 		io.out('')
 
 		# Game loop
+		self.p.at.describe()
+		
 		while True:
-			self.p.at.describe()
-			io.send_in()
+			words = io.send_in()
+			self.parser.parse(words)
 
+def fuck_all_rooms():
+	r1 = Room("Dark Room", "This is a very dark room.")
+	r2 = Room("Dim Room", "This is a slightly brighter room.")
+	r1.paths["down"] = r2
+	r2.paths["up"] = r1
 
+	roomlist = [r1, r2]
+
+	with open("rooms.bin", "wb") as rooms:
+		pickle.dump(roomlist, rooms)
+
+fuck_all_rooms()
 g = Game()
-#g.debug()
 g.run()

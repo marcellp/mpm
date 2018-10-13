@@ -4,7 +4,7 @@ from IOStream import io
 
 class Entity(object):
 	MAX_SPECIAL_POINTS = 40
-	DEFAULT_BODY_PARTS = ("head", "torso","left leg", "right leg", "right arm","left arms")
+	DEFAULT_BODY_PARTS = ("head", "torso","left leg", "right leg", "right hand","left hand")
 	DEFAULT_SKILLS = {  "barter": "charisma", "lockpick": "perception", "medicine": "intelligence",
 						"meelee": "strength", "sneak": "agility", "speech": "charisma", "unarmed": "endurance"}
 

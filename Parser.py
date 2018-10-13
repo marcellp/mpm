@@ -125,7 +125,6 @@ class Parser(object):
 				io.out('That is not a valid item.')
 				return False
 
-
 			room.add_item(item)
 
 			io.out('You have successfully dropped {} in {}.'.format(item, room))
@@ -142,8 +141,28 @@ class Parser(object):
 
 		return True
 
-	def parse_use_item(self, str):
-		pass
+	def parse_use_item(self, words):
+		if len(words) == 0 or words[0] != 'use':
+			return None
+
+		if len(words) == 1:
+			io.out('USAGE: use [item id]. Get item id from `look`.')
+			return False
+
+		try:
+			index = int(words[1])
+		except:
+			io.out('Invalid index specified.')
+			return False
+
+		try:
+			item = self.game.p.inventory[index]
+		except IndexError:
+			io.out('This is not a valid item.')
+			return False
+
+		item[0].use(self.game.p)
+		return True
 
 	def parse(self, str):
 		words = str.strip().split()

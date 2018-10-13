@@ -54,14 +54,22 @@ class Weapon(Item):
 
         if not user.equipped["right hand"]:
             user.equipped["right hand"] = self
+
+            if user.local_player:
+            	io.out('You are now wielding a {} in your right hand'.format(self.name))
+
             return True
 
         elif not user.equipped["left hand"]:
             user.equipped["left hand"] = self
+
+            if user.local_player:
+            	io.out('You are now wielding a {} in your left hand'.format(self.name))
+
             return True
 
         else:
-            print(self.name," couldnt be equipped, check equipped items")
+            io.out('You do not have more hands to hold the {}'.format(self.name))
             return False
 
 
@@ -76,9 +84,16 @@ class Clothing(Item):
         #assign actual weapon properties in here
         self.attributes = clothingJson["attributes"]
 
-    def use(self,user):
-        if not user.eqiupped[self.attributes["part"]]:
-            user.eqiupped[self.attributes["part"]] = self
+    def use(self, user):
+        if not user.equipped[self.attributes["part"]]:
+            user.equipped[self.attributes["part"]] = self
+
+            if user.local_player:
+            	io.out('You have put on your {}'.format(self.name))
+
             return True
         else:
+            if user.local_player:
+            	io.out('You already have something placed there.')
+
             return False

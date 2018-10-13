@@ -142,7 +142,9 @@ class Game(object):
 		self.show_intro()
 		self.p = self.create_character()
 		c = self.get_item("Kevlar vest")
+		d = self.get_item("Baseball bat")
 		self.p.add_item(c)
+		self.p.add_item(d)
 
 		io.out('')
 

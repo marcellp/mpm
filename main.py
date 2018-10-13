@@ -6,6 +6,7 @@ from Parser import Parser
 import json
 import pickle
 import copy
+import pprint
 
 
 class Game(object):
@@ -51,9 +52,23 @@ class Game(object):
         with open("clothing.json") as f:
             raw_file_data = json.load(f)
         clothing = tuple(Clothing(x) for x in raw_file_data)
+        self.assets = clothing + weapons
+
+        self.entity_store = []
+        with open("entites.json") as f:
+            raw_file_data = json.load(f)
+
+        for entity in raw_file_data:
+            temp = Entity()
+            for item in entity["inventory"]:
+                temp.add_item(self.get_item(item))
+            temp.equipped = entity["equipped"]
+
+            self.entity_store.append(temp)
 
         # tuple of all assets
-        self.assets = clothing + weapons
+        self.entity_store = tuple(self.entity_store)
+        pprint.pprint(self.entity_store[0].inventory)
 
     def create_character(self):
         while True:
@@ -159,4 +174,5 @@ class Game(object):
 
 
 g = Game()
+
 g.run()

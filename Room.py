@@ -1,5 +1,6 @@
 from IOStream import io
 from Item import *
+from copy import copy
 
 class Room(object):
 
@@ -30,21 +31,23 @@ class Room(object):
 		else:
 			io.out("You can go {}.".format(', '.join(directions)))
 
-	def get_entities(self, initial = False):
+	def get_entities(self, who_for, initial = False):
 		"""
 		If verbose is true, we will print information for non-existent stuff.
 		Should be set only for detailed looking.
 		"""
 
-		if not self.entities:
+		entities_except_current = self.entities[:].remove(who_for)
+
+		if not entities_except_current:
 			if not initial:
 				io.out('There is no one else in the room.')
 
 			return False
 		else:
 			output = ["There is a(n)"]
-			for i,thing in enumerate(self.entites):
-				output.append(thing+"("+i+")")
+			for i,thing in enumerate(entities_except_current):
+				output.append(str(thing)+"("+i+")")
 			output.append("in this room")
 
 			io.out(" ".join(output))
@@ -74,13 +77,13 @@ class Room(object):
 
 		return True
 
-	def describe(self, initial = True):
+	def describe(self, who_for, initial = True):
 		if initial:
 			io.out(self.name.upper())
 
 		io.out(self.description)
 		io.out("")
-		self.get_entities(initial)
+		self.get_entities(initial = initial, who_for = who_for)
 		self.get_items(initial)
 
 	def get_room_at(self, direction):

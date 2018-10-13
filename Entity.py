@@ -192,6 +192,17 @@ class Human(Entity):
 
 			io.out('{:<16}{}'.format(bodypart.upper(), item))
 
+	def move_to(self, room):
+		curr_room = self.at
+
+		try:
+			curr_room.entities.remove(self)
+		except:
+			pass
+
+		self.at = room
+		room.entities.append(self)
+
 	def show_pep(self):
 		io.out('')
 		io.out('PEP-BOY Mk. 8 Copyright 2018 mpm, inc. All rights reserved.')

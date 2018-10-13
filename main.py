@@ -107,7 +107,7 @@ class Game(object):
 				break
 
 		# Character stats created, let us put the character into the first available room.
-		p.at = self.rooms[0]
+		p.move_to(self.rooms[0])
 
 		return p
 
@@ -139,7 +139,7 @@ class Game(object):
 		io.out('')
 
 		# Game loop
-		self.p.at.describe()
+		self.p.at.describe(who_for = self.p)
 		
 		while True:
 			words = io.send_in()

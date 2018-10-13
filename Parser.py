@@ -30,8 +30,8 @@ class Parser(object):
 			io.out('The room is locked and you cannot go in.')
 			return False
 
-		self.game.p.at = next_room
-		next_room.describe()
+		self.game.p.move_to(next_room)
+		next_room.describe(self.game.p)
 		return True
 
 	def parse_inventory(self, words):
@@ -45,7 +45,7 @@ class Parser(object):
 		if len(words) != 1 or (words[0] != 'look' and words[0] != 'inspect'):
 			return None
 
-		self.game.p.at.describe(initial = False)
+		self.game.p.at.describe(who_for = self.game.p, initial = False)
 		return True
 
 	def parse_observe_item(self, words):
@@ -142,10 +142,13 @@ class Parser(object):
 
 		return True
 
+	def parse_use_item(self, str):
+		pass
+
 	def parse(self, str):
 		words = str.strip().split()
 
 		if not words:
 			return
 
-		not self.parse_move(words) and not self.parse_inventory(words) and not self.parse_observe_room(words) and not self.parse_observe_item(words) and not self.parse_pep(words) and not self.parse_player_room_item_interaction(words)
+		not self.parse_move(words) and not self.parse_inventory(words) and not self.parse_observe_room(words) and not self.parse_observe_item(words) and not self.parse_pep(words) and not self.parse_player_room_item_interaction(words) and not self.parse_use_item(words)

@@ -5,16 +5,14 @@ from Item import Item,Weapon,Clothing
 from Parser import Parser
 import json
 import pickle
+import copy
 
 class Game(object):
 	def __init__(self):
-		self.rooms = self.load_rooms()
 		self.parser = Parser(self)
-
-		self.weapons = ()
-		self.clothes = ()
-
+		#self.assets #filled in load assets
 		self.load_assets()
+		self.load_rooms()
 
 	#def load_rooms(self):
 	#	with open("rooms.bin", "rb") as rooms:
@@ -53,11 +51,15 @@ class Game(object):
 		"""read from json file parse to tuples as types, copy into rooms from here"""
 		with open("weapons.json") as f:
 			raw_file_data = json.load(f)
-		self.weapons = tuple(Weapon(x) for x in raw_file_data)
+		weapons = tuple(Weapon(x) for x in raw_file_data)
 
 		with open("clothing.json") as f:
 			raw_file_data = json.load(f)
-		self.clothing = tuple(Clothing(x) for x in raw_file_data)
+		clothing = tuple(Clothing(x) for x in raw_file_data)
+
+		#tuple of all assets
+		self.assets = clothing + weapons
+
 
 	def create_character(self):
 		while True:
@@ -119,10 +121,16 @@ class Game(object):
 				break
 
 		# Character stats created, let us put the character into the first available room.
-		p.at = self.rooms[0]
-		print(p.at.paths)
+		p.move_to(self.rooms[0])
 
 		return p
+
+	def get_item(self,searchStr):
+		"""looks in assets for the specified search key
+			returns none if not found"""
+		for item in self.assets:
+			if searchStr == item.name:
+				return copy.deepcopy(item)
 
 	def show_intro(self):
 		with open("title.txt") as f:
@@ -139,34 +147,17 @@ class Game(object):
 	def run(self):
 		self.show_intro()
 		self.p = self.create_character()
-		c = Item(name  = "Cola", desc = "Delicious diabetes-inducing beverage", weight = 0.1)
-
-
+		c = self.get_item("Kevlar vest")
 		self.p.add_item(c)
 
 		io.out('')
 
 		# Game loop
-		self.p.at.describe()
+		self.p.at.describe(who_for = self.p)
 		
 		while True:
 			words = io.send_in()
 			self.parser.parse(words)
 
-def fuck_all_rooms():
-	r1 = Room("Dark Room", "This is a very dark room.")
-	r2 = Room("Dim Room", "This is a slightly brighter room.")
-	f = Item(name="Fanta", desc="A more delicious, diabetes-inducing beverage", weight=0.2)
-	r1.items.append(f)
-
-	r1.paths["down"] = r2
-	r2.paths["up"] = r1
-
-	roomlist = [r1, r2]
-
-	with open("rooms.bin", "wb") as rooms:
-		pickle.dump(roomlist, rooms)
-
-#fuck_all_rooms()
 g = Game()
 g.run()

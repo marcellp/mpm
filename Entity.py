@@ -153,6 +153,7 @@ class Human(Entity):
 
         io.out('')
         io.out('YOUR INVENTORY')
+        io.out('Use inspect inventory [id] to inspect an item in your inventory.')
 
         if not self.inventory:
             io.out('You do not seem to be carrying anything.')

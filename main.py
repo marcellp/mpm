@@ -9,18 +9,22 @@ import copy
 
 class Game(object):
 	def __init__(self):
-		self.rooms = self.load_rooms()
 		self.parser = Parser(self)
 		#self.assets #filled in load assets
 		self.load_assets()
-
-
+		self.load_rooms()
 
 	def load_rooms(self):
-		with open("rooms.bin", "rb") as rooms:
-			rooms = pickle.load(rooms)
+		r1 = Room("Dark Room", "This is a very dark room.")
+		r2 = Room("Dim Room", "This is a slightly brighter room.")
+		
+		f = self.get_item("Baseball bat")
+		r1.add_item(f)
 
-		return rooms
+		r1.paths["down"] = r2
+		r2.paths["up"] = r1
+
+		self.rooms = (r1, r2)
 
 	def save_rooms(self):
 		if not self.rooms:
@@ -129,9 +133,7 @@ class Game(object):
 	def run(self):
 		self.show_intro()
 		self.p = self.create_character()
-		c = Item(name  = "Cola", desc = "Delicious diabetes-inducing beverage", weight = 0.1)
-
-
+		c = self.get_item("Kevlar vest")
 		self.p.add_item(c)
 
 		io.out('')
@@ -143,20 +145,5 @@ class Game(object):
 			words = io.send_in()
 			self.parser.parse(words)
 
-def fuck_all_rooms():
-	r1 = Room("Dark Room", "This is a very dark room.")
-	r2 = Room("Dim Room", "This is a slightly brighter room.")
-	f = Item(name="Fanta", desc="A more delicious, diabetes-inducing beverage", weight=0.2)
-	r1.items.append(f)
-
-	r1.paths["down"] = r2
-	r2.paths["up"] = r1
-
-	roomlist = [r1, r2]
-
-	with open("rooms.bin", "wb") as rooms:
-		pickle.dump(roomlist, rooms)
-
-fuck_all_rooms()
 g = Game()
 g.run()

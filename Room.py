@@ -67,6 +67,8 @@ class Room(object):
 
 			io.out(", ".join(output))
 
+		io.out('Use inspect room [id] to inspect an item in this room.')
+
 		return True
 
 	def describe(self, initial = True):

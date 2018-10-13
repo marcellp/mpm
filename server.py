@@ -17,31 +17,27 @@ def receiver(cl_sock, cl_addr):
 	global connected
 	c = True
 	while c:
-		got = cl_sock.recv(1024)
-		print("{} received from {}:{}".format(got.decode(), cl_addr[0], cl_addr[1]))
-		if got.decode() == "dc":
+		got = cl_sock.recv(1024).decode()
+		print("{} received from {}:{}".format(got, cl_addr[0], cl_addr[1]))
+		if got == "dc":
 			c = False
 		
-		elif got.decode() == "shutdown":
-			cl_sock.close()
-			sv_sock.close()
-			print("Exiting...")
-			raise SystemExit
-		
-		elif got.decode().startswith("print "):
-			if got.decode().split(" ")[1] in locals():
+		#Debugging Stuff
+		elif got.startswith("print "):
+			if got.split(" ")[1] in locals():
 				print("Local: ", end="")
-				print(locals()[got.decode().split(" ")[1]])
-			elif got.decode().split(" ")[1] in globals():
+				print(locals()[got.split(" ")[1]])
+			elif got.split(" ")[1] in globals():
 				print("Global: ", end="")
-				print(globals()[got.decode().split(" ")[1]])
+				print(globals()[got.split(" ")[1]])
 			else:
-				print("Var {} not found".format(got.decode().split(" ")[1]))
+				print("Var {} not found".format(got.split(" ")[1]))
 
-		elif got.decode().startswith("to "):
-			dest_addr = got.decode().split(" ")[1]
-			dest_port = got.decode().split(" ")[2]
-			msg = got.decode().split(" ")[3]
+		#client --> server --> client
+		elif got.startswith("to "):
+			dest_addr = got.split(" ")[1]
+			dest_port = got.split(" ")[2]
+			msg = got[3:]
 			connected[(dest_addr, int(dest_port))].send(msg.encode())
 
 	cl_sock.close()

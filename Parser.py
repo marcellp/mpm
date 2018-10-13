@@ -168,6 +168,9 @@ class Parser(object):
 		words = str.strip().split()
 
 		if not words:
-			return
+			return True
+
+		if words[0] == "exit":
+			return False
 
 		not self.parse_move(words) and not self.parse_inventory(words) and not self.parse_observe_room(words) and not self.parse_observe_item(words) and not self.parse_pep(words) and not self.parse_player_room_item_interaction(words) and not self.parse_use_item(words)

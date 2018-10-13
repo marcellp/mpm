@@ -27,6 +27,7 @@ class Entity(object):
 			self.body_parts = Entity.DEFAULT_BODY_PARTS
 
 		self.equipped = {x:None for x in self.body_parts}
+		self.crippled = {x:False for x in self.body_parts}
 
 		#self.use_context = {Item_type.food:self.eat,Item_type.wearable:self.equip}
 
@@ -163,7 +164,7 @@ class Human(Entity):
 	def get_hp(self):
 		return 90 + (self.get_stat("endurance") * 20) + (self.level * 10)
 
-	def get_stamina(self):
+	def get_ap(self):
 		return 5 + floor(self.get_stat("agility") / 2)
 
 	def show_inventory(self):
@@ -172,7 +173,8 @@ class Human(Entity):
 
 		io.out('')
 		io.out('YOU ARE CARRYING...')
-		io.out('Use inspect inventory [id] to inspect an item in your inventory.')
+		io.out('Use `inspect inventory [id]` to inspect an item in your inventory.')
+		io.out('Use `use [id]` to use an item in your inventory.')
 
 		if not self.inventory:
 			io.out('You do not seem to be carrying anything.')
@@ -191,6 +193,7 @@ class Human(Entity):
 				item = "Nothing"
 
 			io.out('{:<16}{}'.format(bodypart.upper(), item))
+		io.out('')
 
 	def move_to(self, room):
 		curr_room = self.at
@@ -212,7 +215,7 @@ class Human(Entity):
 		io.out('')
 
 		io.out('STATISTICS')
-		io.out('LVL:\t{}\tHP:\t{}\tSTA:\t{}'.format(self.level, self.get_hp(), self.get_stamina()))
+		io.out('LVL:\t{}\tHP:\t{}\tAP:\t{}'.format(self.level, self.get_hp(), self.get_ap()))
 		io.out('STR:\t{}\tPER:\t{}\tEND:\t{}'.format(self.get_stat("strength"), self.get_stat("perception"), self.get_stat("endurance")))
 		io.out('CHA:\t{}\tINT:\t{}\tAGL:\t{}'.format(self.get_stat("charisma"), self.get_stat("intelligence"), self.get_stat("agility")))
 		io.out('LCK:\t{}'.format(self.get_stat("luck")))
@@ -220,20 +223,31 @@ class Human(Entity):
 
 		io.out('SKILLS')
 		for skill in self.skills.keys():
-			io.out('{:<16}{}'.format(skill.upper(), self.get_skill(skill)))
+			io.out('{:<16}{}'.format(skill.capitalize(), self.get_skill(skill)))
+		io.out('')
 
+		io.out('BODY STATE')
+		for bodypart, crippled in self.crippled.items():
+
+			if crippled:
+				crippled = "CRIPPLED"
+			else:
+				crippled = "INTACT"
+
+			io.out('{:<16}{}'.format(bodypart.capitalize(), crippled))
+		io.out('')
 
 
 class Creature(Entity):
 
-	def __init__(self,hp,stamina):
+	def __init__(self,hp,ap):
 		Entity.__init__(self)
 		self.hp = hp
-		self.stamina = stamina
+		self.ap = ap
 		pass
 
 	def get_hp(self):
 		return self.hp
 
-	def get_stamina(self):
-		return self.stamina
+	def get_ap(self):
+		return self.ap

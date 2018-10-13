@@ -122,8 +122,10 @@ class Game(object):
 	def run(self):
 		io.out("mpm version 1 loaded\n")
 		self.p = self.create_character()
-		i = Item(name  = "Cola", desc = "Delicious diabetes-inducing beverage", weight = 0.1)
-		self.p.add_item(i)
+		c = Item(name  = "Cola", desc = "Delicious diabetes-inducing beverage", weight = 0.1)
+		f = Item(name  = "Fanta", desc = "A more delicious, diabetes-inducing beverage", weight = 0.2)
+
+		self.p.add_item(c)
 
 		io.out('')
 

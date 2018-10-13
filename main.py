@@ -7,12 +7,14 @@ import json
 import pickle
 
 class Game(object):
-
 	def __init__(self):
-		self.show_intro()
-		self.get_assets()
 		self.rooms = self.load_rooms()
 		self.parser = Parser(self)
+
+		self.weapons = ()
+		self.clothes = ()
+
+		self.load_assets()
 
 	def load_rooms(self):
 		with open("rooms.bin", "rb") as rooms:
@@ -27,13 +29,15 @@ class Game(object):
 		with open("rooms.bin", "wb") as rooms:
 			pickle.dump(self.rooms, rooms)
 
-	def debug(self):
-		r = Room("Dark room")
-		r.paths["up"] = True
-		r.paths["down"] = True
+	def load_assets(self):
+		"""read from json file parse to tuples as types, copy into rooms from here"""
+		with open("weapons.json") as f:
+			raw_file_data = json.load(f)
+		self.weapons = tuple(Weapon(x) for x in raw_file_data)
 
-		self.rooms = [r]
-		self.save_rooms()
+		with open("clothing.json") as f:
+			raw_file_data = json.load(f)
+		self.clothing = tuple(Clothing(x) for x in raw_file_data)
 
 	def create_character(self):
 		while True:
@@ -111,18 +115,8 @@ class Game(object):
 				print(line,end="")
 			print("\n")
 
-	def get_assets(self):
-		"""read from json file parse to tuples as types, copy into rooms from here"""
-		with open("weapons.json") as f:
-			raw_file_data = json.load(f)
-		self.weapons = tuple(Weapon(x) for x in raw_file_data)
-
-		with open("clothing.json") as f:
-			raw_file_data = json.load(f)
-		self.clothing = tuple(Clothing(x) for x in raw_file_data)
-
 	def run(self):
-		io.out("mpm version 1 loaded\n")
+		self.show_intro()
 		self.p = self.create_character()
 		c = Item(name  = "Cola", desc = "Delicious diabetes-inducing beverage", weight = 0.1)
 

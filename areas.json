@@ -7,7 +7,6 @@
 		"exits" : {
 			"door" : "corridor",
 		},
-		"return" : true,
 	},
 
 	"corridor" : {
@@ -16,10 +15,10 @@
 		"items" : [],
 		"entities" : ["scavenger"],
 		"exits" : {
+			"morgue_door" : "morgue",
 			"window" : "rooftop",
-			"door" : "stairwell_top",
+			"far_door" : "stairwell_top",
 		},
-		"return" : true,
 	},
 
 	"rooftop" : {
@@ -28,8 +27,8 @@
 		"items" : ["pipe"],
 		"entities" : [],
 		"exits" : {
+			"window" : "corridor",
 		},
-		"return" : true,
 	},
 
 	"stairwell_top" : {
@@ -38,10 +37,10 @@
 		"items" : [],
 		"entities" : [],
 		"exits" : {
+			"corridor_door" : "corridor",
 			"elevator_shaft_ladder" : "basement",
 			"stairs" : "ground floor",
 		},
-		"return" : true,
 	},
 
 	"template" : {
@@ -52,6 +51,5 @@
 		"exits" : {
 			
 		},
-		"return" : true,
 	},
 }

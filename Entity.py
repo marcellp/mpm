@@ -1,5 +1,6 @@
 import Item
 from math import floor
+from Item import *
 
 class Entity(object):
 
@@ -23,7 +24,7 @@ class Entity(object):
 
         self.clothes = {x:None for x in self.body_parts}
 
-        #self.use_context = {type.food}
+        self.use_context = {Item_type.food:self.eat,Item_type.wearable:self.equip}
 
     def use_item(self,index):
         item = self.inventory.pop(index)
@@ -53,9 +54,9 @@ class Entity(object):
         """returns the item if the player has it
         else returns none"""
 
-        for item in self.inventory:
+        for i,item in enumerate(self.inventory):
             if item.name == item_name:
-                return item
+                return self.inventory.pop(i)
 
         return None
 

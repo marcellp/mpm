@@ -1,5 +1,6 @@
 from Item import *
 from math import floor, ceil
+from random import random
 from IOStream import io
 
 class Entity(object):
@@ -35,6 +36,45 @@ class Entity(object):
 		self.crippled = {x:False for x in self.body_parts}
 
 		#self.use_context = {Item_type.food:self.eat,Item_type.wearable:self.equip}
+
+	def get_equipped_weapon(self):
+		left_hand = self.equipped["left hand"]
+		right_hand = self.equipped["right hand"]
+
+		if not isinstance(left_hand,Weapon):
+			left_hand = None
+		if not isinstance(right_hand,Weapon):
+			right_hand = None
+
+		return right_hand,left_hand
+
+
+	def attack_send(self,victim):
+		if victim.get_hp <= 0:
+			io.out(victim.name, " no use, is already dead")
+
+	 	weapons =  self.get_equipped_weapon()
+		attack_weapon = None
+
+		if weapons ==(None,None):
+			damage = ceil(self.get_skill("unarmed")/20 + 0.5)
+		else:
+			damage = 0
+			for weapon in weapons:
+				if weapon and weapon.attributes["dpa"] > damage:
+					damage = weapon.attributes["dpa"]
+					attack_weapon = weapon
+
+			crit_chance = ((self.get_stat("luck") * 0.01) * attack_weapon.attributes["crit_chance"]) + 0.15
+
+			if random() < crit_chance:
+				damage += attack_weapon.attributes["crit_damage"]
+			
+
+
+
+	def attack_receive(self,attacker):
+		pass
 
 	def add_item(self, item, amount = 1):
 		"""adds the item to the players inventory if it is an item"""

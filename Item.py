@@ -22,3 +22,13 @@ class Item(object):
 
     def __str__(self):
     	return self.name
+
+class Weapon(Item):
+    #structure as in the json in main
+    def __init__(self,weaponJson):
+
+        #for inherited attributes
+        Item.__init__(self,weaponJson["name"],weaponJson["desc"],
+                      weaponJson["value"],weaponJson["weight"])
+        #assign actual weapon properties in here
+        self.attributes = weaponJson["attributes"]

@@ -2,19 +2,23 @@ from enum import Enum
 
 class Item(object):
 
-    def __init__(self,name,desc,weight,effect,item_code=None,inventory=None):
+    def __init__(self, name, desc = None, value = 0, weight = 0, container = False):
         self.name = name
-        self.desc = desc
-        self.weight = weight
-        self.effect = effect
-        self.item_code = item_code
-        self.inventory = inventory
 
-    ### add types that effect what item does
+        if desc:
+        	self.desc = desc
+        else:
+        	self.desc = "Yep. Looks like an item to me."
+
+       	self.value = value
+        self.weight = weight
+
+        self.container = container
+
+        if self.container:
+        	self.inventory = []
+        else:
+        	self.inventory = None
 
     def __str__(self):
     	return self.name
-
-class Item_type(Enum):
-    food = 2
-    wearable = 3

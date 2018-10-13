@@ -72,9 +72,6 @@ class Weapon(Item):
             io.out('You do not have more hands to hold the {}'.format(self.name))
             return False
 
-
-
-
 class Clothing(Item):
     def __init__(self, clothingJson):
 

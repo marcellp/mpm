@@ -1,6 +1,6 @@
 from IOStream import io
 from Room import Room
-from Entity import Entity
+from Entity import Entity, Human
 from Player import Player
 from Item import Item
 from Parser import Parser
@@ -9,6 +9,7 @@ import pickle
 class Game(object):
 
 	def __init__(self):
+		self.show_intro()
 		self.rooms = self.load_rooms()
 		self.parser = Parser(self)
 
@@ -45,7 +46,7 @@ class Game(object):
 			if sex == "male" or sex == "female":
 				break
 
-		p = Player(name, sex)
+		p = Human(name, sex, local_player = True)
 		io.out("Good job, {}. To create your character, assign some skills to your character.\n".format(name))
 		
 		"""
@@ -96,6 +97,17 @@ class Game(object):
 		p.at = self.rooms[0]
 
 		return p
+
+	def show_intro(self):
+		with open("title.txt") as f:
+			for line in f:
+				print(line,end="")
+
+			print("\n")
+
+		with open("intro.txt") as f:
+			for line in f:
+				print(line,end="")
 
 
 	def run(self):

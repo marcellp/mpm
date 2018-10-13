@@ -48,6 +48,39 @@ class Parser(object):
 		self.game.p.at.describe(initial = False)
 		return True
 
+	def parse_observe_item(self, words):
+		if len(words) != 3 or (words[0] != 'look' and words[0] != 'inspect') or (words[1] != "room" and words[1] != "inventory"):
+			return None
+
+		try:
+			index = int(words[2])
+		except:
+			io.out('USAGE: [look/inspect] [room/inventory] [index]')
+			return False
+
+		target = words[1]
+
+		if target == "room":
+			try:
+				item = self.game.p.at.items[index]
+			except IndexError:
+				io.out('That item does not exist.')
+				return None
+
+			item.describe()
+		elif target == "inventory":
+			try:
+				item = self.game.p.inventory[index]
+			except IndexError:
+				io.out('That item does not exist.')
+				return None
+
+			item.describe()
+		else:
+			return False
+
+		return True
+
 	def parse_pep(self, words):
 		if len(words) != 1 or (words[0] != 'pep' and words[0] != 'stats' and words[0] != 'skills'):
 			return None
@@ -111,4 +144,4 @@ class Parser(object):
 		if not words:
 			return
 
-		not self.parse_move(words) and not self.parse_inventory(words) and not self.parse_observe_room(words) and not self.parse_pep(words) and not self.parse_player_room_item_interaction(words)
+		not self.parse_move(words) and not self.parse_inventory(words) and not self.parse_observe_room(words) and not self.parse_observe_item(words) and not self.parse_pep(words) and not self.parse_player_room_item_interaction(words)

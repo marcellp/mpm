@@ -3,18 +3,25 @@ from math import floor
 from Item import *
 
 class Entity(object):
-
     MAX_SPECIAL_POINTS = 40
     DEFAULT_BODY_PARTS = ("head", "chest", "legs", "shoes")
 
-    def __init__(self, stats, level=1, body_parts = None):
+    def __init__(self, stats, level = 1, local_player = False, body_parts = None):
         self.alive = True
+
         self.attributes = {}
+        self.stats = stats
+
         self.level = level
+        self.xp = 0
+
         self.inventory = []
         self.actions = {}
+
         self.at = None
-        self.stats = stats
+        
+        self.local_player = False
+
         self.update_attributes()
 
         if body_parts:
@@ -47,7 +54,6 @@ class Entity(object):
         try:
             return self.attributes.get(key)
         except KeyError:
-            print("key was not found for attributes")
             return None
 
     def drop_item(self,item_name):
@@ -72,6 +78,22 @@ class Entity(object):
             except KeyError:
                 print("couldnt change attributes")
 
+    def add_xp(self, increase = 0):
+        self.xp += increase
+        while self.xp >= self.xp_to_level_up():
+            self.xp -= self.xp_to_level_up()
+            self.level_up()
+
+    def level_up(self):
+        self.level += 1
+        self.update_attributes()
+
+        if self.local_player:
+            io.out("You are now level {}!".format(self.level))
+
+    def xp_to_level_up(self):
+        return 50+150*self.level
+
     #def change hp/kill stuff
 
     #boilerplate
@@ -86,3 +108,37 @@ class Entity(object):
     def load(self,file_name=""):
         """load the object from json"""
         pass
+
+class Human(Entity):
+    def __init__(self, name, sex, local_player = False, stats = None):
+
+        if not stats:
+            self.stats  =   {"level":0,"strength":0,"perception":0,"endurance":0,
+                            "charisma":0,"intelligence":0,"agility":0,"luck":0}
+        else:
+            self.stats = stats
+
+        self.local_player = local_player
+        self.sex = sex
+
+        Entity.__init__(self, self.stats, local_player)
+
+    def show_inventory(self):
+        if not self.local_player:
+            return
+
+        io.out('')
+        io.out('YOUR INVENTORY')
+
+        if not self.inventory:
+            io.out('You do not seem to be carrying anything.')
+
+        for (i, item) in zip(range(1, len(self.inventory) + 1), self.inventory):
+            if item:
+                io.out('[{}]\t{}\t\tWGH: {}'.format(i, item, item.weight))
+
+        io.out('')
+
+##continue test on player, coalesce with entity
+#test = Player({"endurence":0,"agility":0},"thing")
+#test.add_xp(1000)

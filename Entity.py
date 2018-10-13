@@ -1,16 +1,25 @@
 from Item import *
-from math import floor
+from math import floor, ceil
 from IOStream import io
 
 class Entity(object):
     MAX_SPECIAL_POINTS = 40
     DEFAULT_BODY_PARTS = ("head", "chest", "legs", "shoes")
+    DEFAULT_SKILLS = {  "barter": "charisma", "lockpick": "perception", "medicine": "intelligence",
+                        "meelee": "strength", "sneak": "agility", "speech": "charisma", "unarmed": "endurance"}
 
-    def __init__(self, stats, level = 1, local_player = False, body_parts = None):
+    def __init__(self, stats = None, level = 1, local_player = False, body_parts = None):
         self.alive = True
 
         self.attributes = {}
-        self.stats = stats
+
+        if stats:
+            self.stats = stats
+        else:
+            self.stats  =   {"level":1,"strength":0,"perception":0,"endurance":0,
+                            "charisma":0,"intelligence":0,"agility":0,"luck":0}
+
+        self.skills = {x : 0 for x in Entity.DEFAULT_SKILLS.keys()}
 
         self.level = level
         self.xp = 0
@@ -21,8 +30,6 @@ class Entity(object):
         self.at = None
         
         self.local_player = local_player
-
-        self.update_attributes()
 
         if body_parts:
             self.body_parts = body_parts
@@ -36,47 +43,65 @@ class Entity(object):
     def use_item(self,index):
         item = self.inventory.pop(index)
 
-    def update_attributes(self):
-        health = 90 + (self.stats["endurance"] * 20) + (self.level * 10)
-        stamina = 5 + floor(self.stats["agility"] / 2)
+    def get_hp(self):
+        return 90 + (self.get_stat("endurance") * 20) + (self.level * 10)
 
-        self.attributes["health"],self.attributes["stamina"] = health,stamina
+    def get_stamina(self):
+        return 5 + floor(self.get_stat("agility") / 2)
 
     def add_item(self,item):
         """adds the item to the players inventory if it is an item"""
 
         if isinstance(item,Item):
             self.inventory.append(item)
+            return True
         else:
-            print("that wasnt an item")
+            return False
 
-    def get_stats(self,key):
-        try:
-            return self.attributes.get(key)
-        except KeyError:
-            return None
-
-    def drop_item(self,item_name):
+    def remove_item(self, index):
         """returns the item if the player has it
         else returns none"""
 
-        for i,item in enumerate(self.inventory):
-            if item.name == item_name:
-                return self.inventory.pop(i)
-
-        return None
-
-    def change_attributes(self,key,amount):
-        """cahnge attributes of an alive entity, invalid operation otherwise"""
-
-        if self.attributes["health"] <= 0:
-            print("invalid operation in change attributes")
+        try:
+            item = self.inventory[itemid]
+        except IndexError:
             return None
-        else:
-            try:
-                self.attributes[key] += amount
-            except KeyError:
-                print("couldnt change attributes")
+
+        self.inventory[itemid] = None
+        return item
+
+    def get_stat(self, key):
+        try:
+            return self.stats.get(key)
+        except KeyError:
+            return None
+
+    def set_stat(self, key, amount):
+        try:
+            self.stats[key] = amount
+            return True
+        except KeyError:
+            return None
+
+    def get_skill(self, skill):
+        skill = skill.lower()
+
+        if skill not in Entity.DEFAULT_SKILLS:
+            raise ValueError('invalid skill specified')
+
+        base_attr = self.get_stat(Entity.DEFAULT_SKILLS[skill])
+        base_value = 2 + (base_attr * 2) + ceil(self.get_stat("luck") / 2)
+
+        return base_value + self.skills[skill]
+
+    def set_skill(self, skill, value):
+        skill = skill.lower()
+
+        if skill not in Entity.DEFAULT_SKILLS:
+            raise ValueError('invalid skill specified')
+
+        self.skills[skill] = value
+        return True
 
     def add_xp(self, increase = 0):
         self.xp += increase
@@ -86,7 +111,6 @@ class Entity(object):
 
     def level_up(self):
         self.level += 1
-        self.update_attributes()
 
         if self.local_player:
             io.out("You are now level {}!".format(self.level))
@@ -113,13 +137,14 @@ class Human(Entity):
     def __init__(self, name, sex, local_player = False, stats = None):
 
         if not stats:
-            self.stats  =   {"level":0,"strength":0,"perception":0,"endurance":0,
-                            "charisma":0,"intelligence":0,"agility":0,"luck":0}
+            self.stats  =   {"level":1,"strength":5,"perception":5,"endurance":5,
+                            "charisma":5,"intelligence":5,"agility":5,"luck":5}
         else:
             self.stats = stats
 
         Entity.__init__(self, stats = self.stats, local_player = local_player)
 
+        self.name = name
         self.sex = sex
 
     def show_inventory(self):
@@ -137,6 +162,26 @@ class Human(Entity):
                 io.out('[{}]\t{}\t\tWGH: {}'.format(i, item, item.weight))
 
         io.out('')
+
+    def show_pep(self):
+        io.out('')
+        io.out('PEP-BOY 2000. Copyright 2018 mpm, inc. All rights reserved.')
+        io.out('')
+
+        io.out('Name:\t{}\t\tSex:\t{}'.format(self.name, self.sex))
+        io.out('')
+
+        io.out('STATISTICS')
+        io.out('LVL:\t{}\tHP:\t{}\tSTA:\t{}'.format(self.level, self.get_hp(), self.get_stamina()))
+        io.out('STR:\t{}\tPER:\t{}\tEND:\t{}'.format(self.get_stat("strength"), self.get_stat("perception"), self.get_stat("endurance")))
+        io.out('CHA:\t{}\tINT:\t{}\tAGL:\t{}'.format(self.get_stat("charisma"), self.get_stat("intelligence"), self.get_stat("agility")))
+        io.out('LCK:\t{}'.format(self.get_stat("luck")))
+        io.out('')
+
+        io.out('SKILLS')
+        for skill in self.skills.keys():
+            io.out('{:<16}{}'.format(skill.upper(), self.get_skill(skill)))
+
 
 ##continue test on player, coalesce with entity
 #test = Player({"endurence":0,"agility":0},"thing")

@@ -5,16 +5,16 @@ from Item import Item,Weapon,Clothing
 from Parser import Parser
 import json
 import pickle
+import copy
 
 class Game(object):
 	def __init__(self):
 		self.rooms = self.load_rooms()
 		self.parser = Parser(self)
-
-		self.weapons = ()
-		self.clothes = ()
-
+		#self.assets #filled in load assets
 		self.load_assets()
+
+
 
 	def load_rooms(self):
 		with open("rooms.bin", "rb") as rooms:
@@ -33,11 +33,15 @@ class Game(object):
 		"""read from json file parse to tuples as types, copy into rooms from here"""
 		with open("weapons.json") as f:
 			raw_file_data = json.load(f)
-		self.weapons = tuple(Weapon(x) for x in raw_file_data)
+		weapons = tuple(Weapon(x) for x in raw_file_data)
 
 		with open("clothing.json") as f:
 			raw_file_data = json.load(f)
-		self.clothing = tuple(Clothing(x) for x in raw_file_data)
+		clothing = tuple(Clothing(x) for x in raw_file_data)
+
+		#tuple of all assets
+		self.assets = clothing + weapons
+
 
 	def create_character(self):
 		while True:
@@ -102,6 +106,13 @@ class Game(object):
 		p.at = self.rooms[0]
 
 		return p
+
+	def get_item(self,searchStr):
+		"""looks in assets for the specified search key
+			returns none if not found"""
+		for item in self.assets:
+			if searchStr == item.name:
+				return copy.deepcopy(item)
 
 	def show_intro(self):
 		with open("title.txt") as f:

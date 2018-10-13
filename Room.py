@@ -1,4 +1,5 @@
 from IOStream import io
+from Item import *
 
 class Room(object):
 
@@ -93,6 +94,9 @@ class Room(object):
 
 		self.items[itemid] = None
 		return item
+
+	def __str__(self):
+		return self.name
 
 	def add_item(self, item):
 

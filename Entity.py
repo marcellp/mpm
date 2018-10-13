@@ -4,8 +4,9 @@ from math import floor
 class Entity(object):
 
     MAX_SPECIAL_POINTS = 40
+    DEFAULT_BODY_PARTS = ("head", "chest", "legs", "shoes")
 
-    def __init__(self,stats,level=1):
+    def __init__(self, stats, level=1, body_parts = None):
         self.alive = True
         self.attributes = {}
         self.level = level
@@ -14,13 +15,18 @@ class Entity(object):
         self.at = None
         self.stats = stats
         self.update_attributes()
-        self.clothes = {x:None for x in ["head","chest","legs","shoes"]}
-        self.use_context = {type.food}
+
+        if body_parts:
+            self.body_parts = body_parts
+        else:
+            self.body_parts = Entity.DEFAULT_BODY_PARTS
+
+        self.clothes = {x:None for x in self.body_parts}
+
+        #self.use_context = {type.food}
 
     def use_item(self,index):
         item = self.inventory.pop(index)
-
-
 
     def update_attributes(self):
         health = 90 + (self.stats["endurance"] * 20) + (self.level * 10)
@@ -79,5 +85,3 @@ class Entity(object):
     def load(self,file_name=""):
         """load the object from json"""
         pass
-
-

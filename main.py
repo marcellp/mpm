@@ -14,12 +14,6 @@ class Game(object):
 		self.load_assets()
 		self.load_rooms()
 
-	#def load_rooms(self):
-	#	with open("rooms.bin", "rb") as rooms:
-	#		rooms = pickle.load(rooms)
-	#
-	#	return rooms
-
 	def save_rooms(self):
 		if not self.rooms:
 			raise Exception("rooms not loaded boi")
@@ -45,7 +39,7 @@ class Game(object):
 				for path, exit in room.paths.items():
 					room.paths[path] = room_dict[exit]
 
-			return tuple([room for room in room_dict.values()])
+			self.rooms = tuple([room for room in room_dict.values()])
 
 	def load_assets(self):
 		"""read from json file parse to tuples as types, copy into rooms from here"""

@@ -1,4 +1,6 @@
 from Entity import Entity
+from IOStream import io
+
 class Player(Entity):
 
     def __init__(self, name, sex, stats = None):
@@ -29,6 +31,19 @@ class Player(Entity):
 
     def xp_to_level_up(self):
         return 50+150*self.level
+
+    def show_inventory(self):
+        io.out('')
+        io.out('YOUR INVENTORY')
+
+        if not self.inventory:
+            io.out('You do not seem to be carrying anything.')
+
+        for (i, item) in zip(range(1, len(self.inventory) + 1), self.inventory):
+            if item:
+                io.out('[{}]\t{}\t\tWGH: {}'.format(i, item, item.weight))
+
+        io.out('')
 
     ##continue test on player, coalesce with entity
 test = Player({"endurence":0,"agility":0},"thing")

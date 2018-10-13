@@ -169,7 +169,7 @@ class Human(Entity):
 
     def show_pep(self):
         io.out('')
-        io.out('PEP-BOY 2000. Copyright 2018 mpm, inc. All rights reserved.')
+        io.out('PEP-BOY Mk. 8 Copyright 2018 mpm, inc. All rights reserved.')
         io.out('')
 
         io.out('Name:\t{}\t\tSex:\t{}'.format(self.name, self.sex))

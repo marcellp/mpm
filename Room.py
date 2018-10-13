@@ -19,11 +19,7 @@ class Room(object):
 		self.entities = []
 		self.locked = False
 
-	def describe(self):
-		io.out(self.name.upper())
-		io.out(self.description)
-		io.out("")
-
+	def get_directions(self):
 		directions = [direction for (direction, room) in self.paths.items() if room]
 
 		if self.path_text:
@@ -32,6 +28,45 @@ class Room(object):
 			io.out('It appears there is no way out of this room.')
 		else:
 			io.out("You can go {}.".format(', '.join(directions)))
+
+	def get_entities(self, initial):
+		"""
+		If verbose is true, we will print information for non-existent stuff.
+		Should be set only for detailed looking.
+		"""
+
+		if not self.entities:
+			if not initial:
+				io.out('There is no one else in the room.')
+
+			return False
+		else:
+			for entity in self.entities:
+				io.out('There is a(n) {} in this room.'.format(", a(n)".join(self.entities)))
+
+		return True
+
+	def get_items(self, initial):
+		if initial:
+			return True
+
+		if not self.items:
+			io.out('There are no items in the room.')
+			return False
+		else:
+			for entity in self.entities:
+				io.out('There is a(n) {} in this room.'.format(", a(n)".join(self.entities)))
+
+		return True
+
+	def describe(self, initial = True):
+		if initial:
+			io.out(self.name.upper())
+
+		io.out(self.description)
+		io.out("")
+		self.get_entities(initial)
+		self.get_items(initial)
 
 	def get_room_at(self, direction):
 		direction = direction.lower()

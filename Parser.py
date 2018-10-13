@@ -41,7 +41,17 @@ class Parser(object):
 		self.game.p.show_inventory()
 		return True
 
+	def parse_observe_room(self, words):
+		if len(words) != 1 or (words[0] != 'look' and words[0] != 'inspect'):
+			return None
+
+		self.game.p.at.describe(initial = False)
+		return True
+
 	def parse(self, str):
 		words = str.strip().split()
 
-		not self.parse_move(words) and not self.parse_inventory(words)
+		if not words:
+			return
+
+		not self.parse_move(words) and not self.parse_inventory(words) and not self.parse_observe_room(words)

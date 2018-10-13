@@ -92,7 +92,7 @@ class Room(object):
 		except IndexError:
 			return None
 
-		self.items[itemid] = None
+		del self.items[itemid]
 		return item
 
 	def __str__(self):

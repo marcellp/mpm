@@ -67,7 +67,7 @@ class Entity(object):
         except IndexError:
             return None
 
-        self.inventory[index] = None
+        del self.inventory[index]
         return item
 
     def get_stat(self, key):
@@ -157,7 +157,7 @@ class Human(Entity):
         if not self.inventory:
             io.out('You do not seem to be carrying anything.')
 
-        for (i, item) in zip(range(1, len(self.inventory) + 1), self.inventory):
+        for (i, item) in zip(range(len(self.inventory)), self.inventory):
             if item:
                 io.out('[{}]\t{}\t\tWGH: {}'.format(i, item, item.weight))
 

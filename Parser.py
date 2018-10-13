@@ -55,10 +55,60 @@ class Parser(object):
 		self.game.p.show_pep()
 		return True
 
+	def parse_player_room_item_interaction(self, words):
+		"""
+		false: pickup
+		true: drop
+		none: invalid
+		"""
+
+		action = None
+		player = self.game.p
+		room = self.game.p.at
+
+		if words[0] == "pickup":
+			action = False
+		elif words[0] == "drop":
+			action = True
+		else:
+			return False
+
+		if len(words) != 2:
+			io.out('USAGE: [pickup/drop] [item id]. Get item id from `look`.')
+			return False
+
+		try:
+			index = int(words[1])
+		except:
+			io.out('Invalid index specified.')
+			return False
+
+		if action:
+			item = player.remove_item(index)
+
+			if not item:
+				io.out('That is not a valid item.')
+				return False
+
+			room.add_item(item)
+			io.out('You have successfully dropped {} in {}.'.format(item, room))
+
+		if not action:
+			item = room.remove_item(index)
+
+			if not item:
+				io.out('That is not a valid item.')
+				return False
+
+			player.add_item(item)
+			io.out('You have successfully picked up {} from {}.'.format(item, room))
+
+		return True
+
 	def parse(self, str):
 		words = str.strip().split()
 
 		if not words:
 			return
 
-		not self.parse_move(words) and not self.parse_inventory(words) and not self.parse_observe_room(words) and not self.parse_pep(words)
+		not self.parse_move(words) and not self.parse_inventory(words) and not self.parse_observe_room(words) and not self.parse_pep(words) and not self.parse_player_room_item_interaction(words)

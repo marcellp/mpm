@@ -4,6 +4,8 @@
     "name":"bandit",
     "hp":50,
     "stamina":50,
-    "inventory":["Baseball bat"]
+    "inventory":["Baseball bat"],
+    "equipped":{"right hand":"Baseball bat","head":null, "torso":null,"left leg":null,
+                "right leg":null, "right arm":null,"left arms":null}
   }
 ]

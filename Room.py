@@ -3,12 +3,10 @@ from Item import *
 
 class Room(object):
 
-	ALLOWED_PATHS = ('up', 'down', 'left', 'right', 'north', 'south', 'east', 'west')
-
 	def __init__(self, name, description = None):
 		self.name = name
 		self.interior = True
-		self.paths = {direction : None for direction in Room.ALLOWED_PATHS}
+		self.paths = {}
 
 		if not description:
 			self.description = "You see an empty room"
@@ -43,8 +41,8 @@ class Room(object):
 			return False
 		else:
 			output = ["There is a(n)"]
-			for i,thing in enumerate(self.entites):
-				output.append(thing+"("+i+")")
+			for i,thing in enumerate(self.entities):
+				output.append(thing+"("+str(i)+")")
 			output.append("in this room")
 
 			io.out(" ".join(output))
@@ -59,9 +57,10 @@ class Room(object):
 			io.out('There are no items in the room.')
 			return False
 		else:
+			print(self.items)
 			output = ["There is a(n)"]
 			for i,thing in enumerate(self.items):
-				output.append(thing.name+"("+str(i)+")")
+				output.append(thing+"("+str(i)+")")
 
 			output.append("in this room.")
 
@@ -77,12 +76,10 @@ class Room(object):
 		io.out("")
 		self.get_entities(initial)
 		self.get_items(initial)
+		self.get_directions()
 
 	def get_room_at(self, direction):
 		direction = direction.lower()
-
-		if direction not in Room.ALLOWED_PATHS:
-			return False
 
 		return self.paths[direction]
 

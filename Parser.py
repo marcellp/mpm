@@ -10,17 +10,17 @@ class Parser(object):
 		if words[0] != 'go' and words[0] != 'move':
 			return None
 
-		if len(words) != 2:
+		if len(words) < 2:
 			io.out('USAGE: [move/go] [direction]')
 			return False
 
-		direction = words[1].lower()
+		direction = " ".join(words[1:]).lower()
 
-		if direction not in Room.ALLOWED_PATHS:
-			io.out('That is not a valid direction to move to.')
+		try:
+			next_room = self.game.p.at.get_room_at(direction)
+		except KeyError:
+			io.out('That is not a valid direction.')
 			return False
-
-		next_room = self.game.p.at.get_room_at(direction)
 
 		if not next_room:
 			io.out('There is nothing in that direction.')

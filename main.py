@@ -16,11 +16,11 @@ class Game(object):
 
 		self.load_assets()
 
-	def load_rooms(self):
-		with open("rooms.bin", "rb") as rooms:
-			rooms = pickle.load(rooms)
-
-		return rooms
+	#def load_rooms(self):
+	#	with open("rooms.bin", "rb") as rooms:
+	#		rooms = pickle.load(rooms)
+	#
+	#	return rooms
 
 	def save_rooms(self):
 		if not self.rooms:
@@ -28,6 +28,26 @@ class Game(object):
 
 		with open("rooms.bin", "wb") as rooms:
 			pickle.dump(self.rooms, rooms)
+
+	def load_rooms(self):
+		with open("areas.json") as f:
+			raw_file_data = json.load(f)
+			room_dict = {}
+
+			for room_data in raw_file_data:
+				room = Room(room_data["name"], room_data["desc"])
+				room.interior = room_data["interior"]
+				room.items = room_data["items"]
+				room.entities = room_data["entities"]
+				room.paths = room_data["exits"]
+
+				room_dict[room_data["name"]] = room
+
+			for room in room_dict.values():
+				for path, exit in room.paths.items():
+					room.paths[path] = room_dict[exit]
+
+			return tuple([room for room in room_dict.values()])
 
 	def load_assets(self):
 		"""read from json file parse to tuples as types, copy into rooms from here"""
@@ -100,6 +120,7 @@ class Game(object):
 
 		# Character stats created, let us put the character into the first available room.
 		p.at = self.rooms[0]
+		print(p.at.paths)
 
 		return p
 
@@ -146,6 +167,6 @@ def fuck_all_rooms():
 	with open("rooms.bin", "wb") as rooms:
 		pickle.dump(roomlist, rooms)
 
-fuck_all_rooms()
+#fuck_all_rooms()
 g = Game()
 g.run()

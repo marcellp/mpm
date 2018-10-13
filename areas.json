@@ -16,9 +16,9 @@
 		"items" : [],
 		"entities" : ["scavenger"],
 		"exits" : {
-			"morgue_door" : "morgue",
+			"morgue door" : "morgue",
 			"window" : "rooftop",
-			"far_door" : "stairwell_top"
+			"far door" : "stairwell (top)"
 		}
 	},
 	{
@@ -32,15 +32,35 @@
 		}
 	},
 	{
-		"name" : "stairwell_top",
+		"name" : "stairwell (top)",
 		"desc" : "You find yourself at the top of a stairwell. The door slams behind you a little louder than you planned... There is an elevator next to the stairs, but the door has been forced open, and now leads into an empty elevator shaft. There is a ladder on the far side of the shaft, leading down, but it doesn't look very safe.",
 		"interior" : true,
 		"items" : [],
 		"entities" : [],
 		"exits" : {
-			"corridor_door" : "corridor",
-			"elevator_shaft_ladder" : "basement",
+			"corridor door" : "corridor",
+			"ladder" : "basement",
 			"stairs" : "ground floor"
+		}
+	},
+	{
+		"name" : "basement",
+		"desc" : "placeholder",
+		"interior" : true,
+		"items" : [],
+		"entities" : [],
+		"exits" : {
+			
+		}
+	},
+	{
+		"name" : "ground floor",
+		"desc" : "placeholder",
+		"interior" : true,
+		"items" : [],
+		"entities" : [],
+		"exits" : {
+			
 		}
 	},
 	{

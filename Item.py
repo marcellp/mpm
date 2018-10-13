@@ -1,4 +1,5 @@
 from enum import Enum
+from IOStream import io
 
 class Item(object):
 
@@ -23,6 +24,13 @@ class Item(object):
     def __str__(self):
     	return self.name
 
+
+    def describe(self):
+        print(self.name,
+              "\n\tDescription: ",self.desc,
+              "\n\tValue: ",self.value,
+              "\n\tWeight: ",self.weight,)
+
 class Weapon(Item):
     #structure as in the json in main
     def __init__(self,weaponJson):
@@ -32,3 +40,10 @@ class Weapon(Item):
                       weaponJson["value"],weaponJson["weight"])
         #assign actual weapon properties in here
         self.attributes = weaponJson["attributes"]
+
+    def describe(self):
+        Item.describe(self)
+        print("Attributes:")
+        for attr in self.attributes:
+            print("\t",attr,": ",self.attributes[attr])
+

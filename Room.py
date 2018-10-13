@@ -29,7 +29,7 @@ class Room(object):
 		else:
 			io.out("You can go {}.".format(', '.join(directions)))
 
-	def get_entities(self, initial):
+	def get_entities(self, initial = False):
 		"""
 		If verbose is true, we will print information for non-existent stuff.
 		Should be set only for detailed looking.

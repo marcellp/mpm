@@ -1,6 +1,6 @@
-import Item
-from math import floor
 from Item import *
+from math import floor
+from IOStream import io
 
 class Entity(object):
     MAX_SPECIAL_POINTS = 40
@@ -20,7 +20,7 @@ class Entity(object):
 
         self.at = None
         
-        self.local_player = False
+        self.local_player = local_player
 
         self.update_attributes()
 
@@ -118,10 +118,9 @@ class Human(Entity):
         else:
             self.stats = stats
 
-        self.local_player = local_player
-        self.sex = sex
+        Entity.__init__(self, stats = self.stats, local_player = local_player)
 
-        Entity.__init__(self, self.stats, local_player)
+        self.sex = sex
 
     def show_inventory(self):
         if not self.local_player:

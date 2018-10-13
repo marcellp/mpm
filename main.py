@@ -1,7 +1,6 @@
 from IOStream import io
 from Room import Room
 from Entity import Entity, Human
-from Player import Player
 from Item import Item
 from Parser import Parser
 import pickle
@@ -113,7 +112,7 @@ class Game(object):
 	def run(self):
 		io.out("mpm version 1 loaded\n")
 		self.p = self.create_character()
-		i = Item("Cola","Delicious diabetes-inducing beverage", 0.1, None)
+		i = Item(name  = "Cola", desc = "Delicious diabetes-inducing beverage", weight = 0.1)
 		self.p.add_item(i)
 
 		io.out('')

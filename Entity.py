@@ -6,6 +6,7 @@ class Entity(object):
     MAX_SPECIAL_POINTS = 40
 
     def __init__(self,stats,level=1):
+        self.alive = True
         self.attributes = {}
         self.level = level
         self.inventory = []
@@ -13,20 +14,34 @@ class Entity(object):
         self.at = None
         self.stats = stats
         self.update_attributes()
+        self.clothes = {x:None for x in ["head","chest","legs","shoes"]}
+        self.use_context = {type.food}
+
+    def use_item(self,index):
+        item = self.inventory.pop(index)
+
 
 
     def update_attributes(self):
-        health = 90 + (self.stats["endurence"] * 20) + (self.level * 10)
+        health = 90 + (self.stats["endurance"] * 20) + (self.level * 10)
         stamina = 5 + floor(self.stats["agility"] / 2)
 
         self.attributes["health"],self.attributes["stamina"] = health,stamina
 
     def add_item(self,item):
+        """adds the item to the players inventory if it is an item"""
 
         if isinstance(item,Item):
             self.inventory.append(item)
         else:
             print("that wasnt an item")
+
+    def get_stats(self,key):
+        try:
+            return self.attributes.get(key)
+        except KeyError:
+            print("key was not found for attributes")
+            return None
 
     def drop_item(self,item_name):
         """returns the item if the player has it
@@ -37,6 +52,18 @@ class Entity(object):
                 return item
 
         return None
+
+    def change_attributes(self,key,amount):
+        """cahnge attributes of an alive entity, invalid operation otherwise"""
+
+        if self.attributes["health"] <= 0:
+            print("invalid operation in change attributes")
+            return None
+        else:
+            try:
+                self.attributes[key] += amount
+            except KeyError:
+                print("couldnt change attributes")
 
     #def change hp/kill stuff
 

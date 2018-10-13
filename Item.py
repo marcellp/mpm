@@ -16,7 +16,5 @@ class Item(object):
     	return self.name
 
 class Item_type(Enum):
-    food_hp = 1
-    food_ap = 2
-    wearable= \
-        3
+    food = 2
+    wearable = 3

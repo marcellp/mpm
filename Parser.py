@@ -48,10 +48,17 @@ class Parser(object):
 		self.game.p.at.describe(initial = False)
 		return True
 
+	def parse_pep(self, words):
+		if len(words) != 1 or (words[0] != 'pep' and words[0] != 'stats' and words[0] != 'skills'):
+			return None
+
+		self.game.p.show_pep()
+		return True
+
 	def parse(self, str):
 		words = str.strip().split()
 
 		if not words:
 			return
 
-		not self.parse_move(words) and not self.parse_inventory(words) and not self.parse_observe_room(words)
+		not self.parse_move(words) and not self.parse_inventory(words) and not self.parse_observe_room(words) and not self.parse_pep(words)

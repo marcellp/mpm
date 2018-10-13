@@ -48,9 +48,7 @@ class Room(object):
 
 			io.out(" ".join(output))
 
-
 		return True
-
 
 	def get_items(self, initial):
 		if initial:
@@ -67,7 +65,6 @@ class Room(object):
 			output.append("in this room.")
 
 			io.out(", ".join(output))
-
 
 		return True
 
@@ -87,3 +84,20 @@ class Room(object):
 			return False
 
 		return self.paths[direction]
+
+	def remove_item(self, itemid):
+		try:
+			item = self.items[itemid]
+		except IndexError:
+			return None
+
+		self.items[itemid] = None
+		return item
+
+	def add_item(self, item):
+
+		if isinstance(item,Item):
+			self.items.append(item)
+			return True
+		else:
+			return False

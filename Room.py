@@ -35,7 +35,8 @@ class Room(object):
 		Should be set only for detailed looking.
 		"""
 
-		entities_except_current = self.entities[:].remove(who_for)
+		entities_except_current = self.entities[:]
+		entities_except_current.remove(who_for)
 
 		if not entities_except_current:
 			if not initial:
@@ -45,7 +46,7 @@ class Room(object):
 		else:
 			output = ["There is a(n)"]
 			for i,thing in enumerate(entities_except_current):
-				output.append(str(thing)+"("+str(i)+")")
+				output.append(str(thing)+" ("+str(i)+")")
 			output.append("in this room")
 
 			io.out(" ".join(output))

@@ -14,7 +14,7 @@
 		"desc" : "You leave the morgue and find yourself in a long corridor. There is a window to your left and a door at the far end, however a strange-looking man blocks your way to the door. His back is turned, and he doesn't seem to have seen you yet.",
 		"interior" : true,
 		"items" : [],
-		"entities" : ["scavenger"],
+		"entities" : ["bandit"],
 		"exits" : {
 			"morgue door" : "morgue",
 			"window" : "rooftop",

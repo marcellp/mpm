@@ -8,7 +8,7 @@ class Entity(object):
 	DEFAULT_SKILLS = {  "barter": "charisma", "lockpick": "perception", "medicine": "intelligence",
 						"meelee": "strength", "sneak": "agility", "speech": "charisma", "unarmed": "endurance"}
 
-	def __init__(self, level = 1, local_player = False, body_parts = None):
+	def __init__(self, level = 1, local_player = False, body_parts = None, name = None):
 		self.alive = True
 
 		self.level = level
@@ -20,6 +20,11 @@ class Entity(object):
 		self.at = None
 		
 		self.local_player = local_player
+
+		if name:
+			self.name = name
+		else:
+			self.name = "living being"
 
 		if body_parts:
 			self.body_parts = body_parts
@@ -125,6 +130,9 @@ class Entity(object):
 
 	def xp_to_level_up(self):
 		return 50+150*self.level
+
+	def __str__(self):
+		return self.name
 
 	#def change hp/kill stuff
 
@@ -239,7 +247,6 @@ class Human(Entity):
 
 
 class Creature(Entity):
-
 	def __init__(self,hp,ap):
 		Entity.__init__(self)
 		self.hp = hp

@@ -32,7 +32,8 @@ class Game(object):
                 room = Room(room_data["name"], room_data["desc"])
                 room.interior = room_data["interior"]
                 room.items = room_data["items"]
-                room.entities = room_data["entities"]
+                room.entities = [self.get_entity(entity) for entity in room_data["entities"]]
+                print(room.entities)
                 room.paths = room_data["exits"]
 
                 room_dict[room_data["name"]] = room
@@ -54,21 +55,18 @@ class Game(object):
         clothing = tuple(Clothing(x) for x in raw_file_data)
         self.assets = clothing + weapons
 
-        self.entity_store = []
+        self.entities = {}
+
         with open("entites.json") as f:
             raw_file_data = json.load(f)
 
         for entity in raw_file_data:
-            temp = Entity()
+            temp = Entity(name = entity["name"])
             for item in entity["inventory"]:
                 temp.add_item(self.get_item(item))
             temp.equipped = entity["equipped"]
 
-            self.entity_store.append(temp)
-
-        # tuple of all assets
-        self.entity_store = tuple(self.entity_store)
-        pprint.pprint(self.entity_store[0].inventory)
+            self.entities[entity["name"]] = temp
 
     def create_character(self):
         while True:
@@ -142,6 +140,13 @@ class Game(object):
         for item in self.assets:
             if searchStr == item.name:
                 return copy.deepcopy(item)
+
+    def get_entity(self, searchStr):
+        """looks in assets for the specified search key
+			returns none if not found"""
+        
+        entity = self.entities.get(searchStr)
+        return copy.deepcopy(entity)
 
     def show_intro(self):
         with open("title.txt") as f:

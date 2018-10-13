@@ -41,10 +41,16 @@ class Room(object):
 
 			return False
 		else:
-			for entity in self.entities:
-				io.out('There is a(n) {} in this room.'.format(", a(n)".join(self.entities)))
+			output = ["There is a(n)"]
+			for i,thing in enumerate(self.entites):
+				output.append(thing+"("+i+")")
+			output.append("in this room")
+
+			io.out(" ".join(output))
+
 
 		return True
+
 
 	def get_items(self, initial):
 		if initial:
@@ -54,8 +60,14 @@ class Room(object):
 			io.out('There are no items in the room.')
 			return False
 		else:
-			for entity in self.entities:
-				io.out('There is a(n) {} in this room.'.format(", a(n)".join(self.entities)))
+			output = ["There is a(n)"]
+			for i,thing in enumerate(self.items):
+				output.append(thing.name+"("+str(i)+")")
+
+			output.append("in this room.")
+
+			io.out(", ".join(output))
+
 
 		return True
 

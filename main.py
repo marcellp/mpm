@@ -123,7 +123,7 @@ class Game(object):
 		io.out("mpm version 1 loaded\n")
 		self.p = self.create_character()
 		c = Item(name  = "Cola", desc = "Delicious diabetes-inducing beverage", weight = 0.1)
-		f = Item(name  = "Fanta", desc = "A more delicious, diabetes-inducing beverage", weight = 0.2)
+
 
 		self.p.add_item(c)
 
@@ -139,6 +139,9 @@ class Game(object):
 def fuck_all_rooms():
 	r1 = Room("Dark Room", "This is a very dark room.")
 	r2 = Room("Dim Room", "This is a slightly brighter room.")
+	f = Item(name="Fanta", desc="A more delicious, diabetes-inducing beverage", weight=0.2)
+	r1.items.append(f)
+
 	r1.paths["down"] = r2
 	r2.paths["up"] = r1
 

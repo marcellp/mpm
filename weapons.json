@@ -19,7 +19,7 @@
     "weight": 3,
     "attributes": {
       "dpa": 9,
-      "crit_chance": 1.0,
+      "crit_chance": 1.2,
       "crit_damage": 9,
       "ap_cost": 25,
       "durability": 889

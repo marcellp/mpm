@@ -6,6 +6,14 @@ class Parser(object):
 	def __init__(self, game):
 		self.game = game
 
+	def parse_help(self, words):
+
+		if words[0] != 'help':
+			return False
+
+		io.out('move/go, inventory/in, look/inspect, pep/stats/skills, pickup/drop, use, attack')
+		return True
+
 	def parse_move(self, words):
 		if words[0] != 'go' and words[0] != 'move':
 			return None
@@ -35,14 +43,14 @@ class Parser(object):
 		return True
 
 	def parse_inventory(self, words):
-		if len(words) != 1 or (words[0] != 'inventory' and words[0] != 'inv'):
+		if (words[0] != 'inventory' and words[0] != 'inv'):
 			return None
 
 		self.game.p.show_inventory()
 		return True
 
 	def parse_observe_room(self, words):
-		if len(words) != 1 or (words[0] != 'look' and words[0] != 'inspect'):
+		if (words[0] != 'look' and words[0] != 'inspect'):
 			return None
 
 		self.game.p.at.describe(who_for = self.game.p, initial = False)
@@ -63,26 +71,28 @@ class Parser(object):
 		if target == "room":
 			try:
 				item = self.game.p.at.items[index]
+				item_obj = item[0]
 			except IndexError:
 				io.out('That item does not exist.')
 				return None
 
-			item.describe()
+			item_obj.describe()
 		elif target == "inventory":
 			try:
 				item = self.game.p.inventory[index]
+				item_obj = item[0]
 			except IndexError:
 				io.out('That item does not exist.')
 				return None
 
-			item.describe()
+			item_obj.describe()
 		else:
 			return False
 
 		return True
 
 	def parse_pep(self, words):
-		if len(words) != 1 or (words[0] != 'pep' and words[0] != 'stats' and words[0] != 'skills'):
+		if (words[0] != 'pep' and words[0] != 'stats' and words[0] != 'skills'):
 			return None
 
 		self.game.p.show_pep()
@@ -118,8 +128,6 @@ class Parser(object):
 
 		if action:
 			item = player.remove_item(index)
-
-			print("we are removing", item)
 
 			if not item:
 				io.out('That is not a valid item.')
@@ -164,6 +172,39 @@ class Parser(object):
 		item[0].use(self.game.p)
 		return True
 
+	def parse_attack(self, words):
+		if words[0] != "attack":
+			return None
+
+		if len(words) != 2:
+			io.out('USAGE: attack [character in room]. Use `look` to get the ID of the character.')
+
+		try:
+			entity_id = int(words[1])
+		except:
+			io.out('Invalid character specified.')
+			return False
+
+		entities_except_current = self.game.p.at.entities[:]
+		entities_except_current.remove(self.game.p)
+		entity_to_attack = None
+
+		if not entities_except_current:
+			io.out('There is no one else in the room, you cannot attack.')
+			return False
+
+		for i, entity in enumerate(entities_except_current):
+			if i == entity_id:
+				entity_to_attack = entity
+				break
+
+		if not entity_to_attack:
+			io.out('There is no such character to attack.')
+			return False
+
+		self.game.p.attack_send(entity)
+		return True
+
 	def parse(self, str):
 		words = str.strip().split()
 
@@ -173,4 +214,6 @@ class Parser(object):
 		if words[0] == "exit":
 			return False
 
-		not self.parse_move(words) and not self.parse_inventory(words) and not self.parse_observe_room(words) and not self.parse_observe_item(words) and not self.parse_pep(words) and not self.parse_player_room_item_interaction(words) and not self.parse_use_item(words)
+		not self.parse_help(words) and not self.parse_move(words) and not self.parse_inventory(words) and not self.parse_observe_room(words) and not self.parse_observe_item(words) and not self.parse_pep(words) and not self.parse_player_room_item_interaction(words) and not self.parse_use_item(words) and not self.parse_attack(words)
+
+		return True

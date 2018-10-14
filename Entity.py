@@ -1,6 +1,6 @@
 from Item import *
 from math import floor, ceil
-from random import random
+import random
 from IOStream import io
 
 class Entity(object):
@@ -14,6 +14,8 @@ class Entity(object):
 
 		self.level = level
 		self.xp = 0
+
+		self.hp = None
 
 		self.inventory = []
 		self.actions = {}
@@ -33,7 +35,7 @@ class Entity(object):
 			self.body_parts = Entity.DEFAULT_BODY_PARTS
 
 		self.equipped = {x:None for x in self.body_parts}
-		self.crippled = {x:False for x in self.body_parts}
+		self.part_damage = {x:0 for x in self.body_parts}
 
 		#self.use_context = {Item_type.food:self.eat,Item_type.wearable:self.equip}
 
@@ -48,33 +50,39 @@ class Entity(object):
 
 		return right_hand,left_hand
 
-
-	def attack_send(self,victim):
-		if victim.get_hp <= 0:
-			io.out(victim.name, " no use, is already dead")
-
-	 	weapons =  self.get_equipped_weapon()
-		attack_weapon = None
-
-		if weapons ==(None,None):
-			damage = ceil(self.get_skill("unarmed")/20 + 0.5)
-		else:
-			damage = 0
-			for weapon in weapons:
-				if weapon and weapon.attributes["dpa"] > damage:
-					damage = weapon.attributes["dpa"]
-					attack_weapon = weapon
-
-			crit_chance = ((self.get_stat("luck") * 0.01) * attack_weapon.attributes["crit_chance"]) + 0.15
-
-			if random() < crit_chance:
-				damage += attack_weapon.attributes["crit_damage"]
-			
-
-
-
-	def attack_receive(self,attacker):
+	def attack_send(self, victim):
 		pass
+
+	def attack_receive(self, attacker, body_part, damage):
+		if self.hp <= 0:
+			return
+
+		if self.local_player:
+			io.out('')
+			io.out('{} has dealt {} damage to you on your {}.'.format(attacker, damage, body_part))
+
+		clothes = self.equipped[body_part]
+
+		# Reduce damage by DR percentage.
+		if isinstance(clothes, Clothing):
+			damage = ceil(damage * (100 - clothes.attributes["dr"]) * 0.01)
+			if self.local_player:
+				io.out('Thanks to your {}, this has been reduced to {}.'.format(damage))
+
+		self.part_damage[body_part] += damage
+
+		if damage > self.get_hp() and (body_part == 'left hand' or body_part == 'right hand'):
+			self.equipped[body_part] = None
+
+			if self.local_player:
+				io.out('Your hand is crippled. Anything that you held in there has been unequipped.')
+
+		self.hp -= damage
+		self.hp = max(self.hp, 0)
+
+		if self.hp == 0 and self.local_player:
+			io.out('You have died.')
+			return
 
 	def add_item(self, item, amount = 1):
 		"""adds the item to the players inventory if it is an item"""
@@ -113,6 +121,11 @@ class Entity(object):
 		item_obj = item[0]
 		amount = item[1]
 
+		for bodypart, equipped in self.equipped.items():
+			if equipped == item_obj:
+				self.equipped[bodypart] = None
+				break
+
 		if amount == 1:
 			del self.inventory[index]
 			return item_obj
@@ -125,9 +138,17 @@ class Entity(object):
 
 	def get_stat(self, key):
 		try:
-			return self.stats.get(key)
+			stat = self.stats.get(key)
 		except KeyError:
 			return None
+
+		if key == "perception" and self.part_damage["head"] > self.get_hp():
+			return max(stat - 4, 1)
+
+		if key == "endurance" and self.part_damage["torso"] > 100:
+			return max(stat - 4, 1)
+
+		return stat
 
 	def set_stat(self, key, amount):
 		try:
@@ -210,10 +231,13 @@ class Human(Entity):
 		self.sex = sex
 
 	def get_hp(self):
-		return 90 + (self.get_stat("endurance") * 20) + (self.level * 10)
+		if self.hp == None:
+			self.hp = 90 + (self.get_stat("endurance") * 20) + (self.level * 10)
+
+		return self.hp
 
 	def get_ap(self):
-		return 5 + floor(self.get_stat("agility") / 2)
+		return 65 + (2 * self.get_stat("agility"))
 
 	def show_inventory(self):
 		if not self.local_player:
@@ -274,27 +298,110 @@ class Human(Entity):
 			io.out('{:<16}{}'.format(skill.capitalize(), self.get_skill(skill)))
 		io.out('')
 
-		io.out('BODY STATE')
-		for bodypart, crippled in self.crippled.items():
-
-			if crippled:
-				crippled = "CRIPPLED"
-			else:
-				crippled = "INTACT"
-
-			io.out('{:<16}{}'.format(bodypart.capitalize(), crippled))
+		io.out('BODY PART DAMAGE')
+		for bodypart, part_damage in self.part_damage.items():
+			io.out('{:<16}{:<8}'.format(bodypart.capitalize(), part_damage))
 		io.out('')
+
+	def attack_send(self, victim):
+		if not self.local_player:
+			return
+
+		if victim.get_hp() <= 0:
+			io.out("You can't fight {}, they are dead.".format(victim))
+			return False
+
+		curr_ap = self.get_ap()
+		io.out("YOU ARE NOW FIGHTING {}".format(str(victim).upper()))
+
+		while True:
+
+			if self.get_hp() <= 0:
+				return
+
+			io.out('')
+			io.out('ROUND')
+			io.out('Opponent has {} HP. You have {} HP. You have {} action points to use in total.'.format(victim.get_hp(), self.get_hp(), curr_ap))
+
+			weapons = self.get_equipped_weapon()
+			unarmed_damage = damage = ceil(self.get_skill("unarmed")/20 + 0.5)
+			damage = None
+
+			for i, weapon in enumerate(weapons):
+				if not weapon:
+					continue
+
+				io.out("[{}] {} (DPA: {}, CRIT damage: {}, AP cost: {}".format(i, weapon, weapon.attributes["dpa"], weapon.attributes["crit_damage"], weapon.attributes["ap_cost"]))
+
+			io.out('Choose a weapon to attack with or type in u to attack unarmed.')
+
+			while True:
+				attack_weapon = io.send_in('! ')
+
+				if attack_weapon == "u":
+					damage = unarmed_damage
+					io.out("Fair enough, use your fists. You will be dealing {} damage.".format(damage))
+					break
+
+				try:
+					attack_weapon = weapons[int(attack_weapon)]
+				except:
+					io.out('Invalid weapon. Try again.')
+					continue
+
+				if attack_weapon.attributes["ap_cost"] > curr_ap:
+					io.out('You do not have enough action points for this action.')
+					continue
+
+				curr_ap -= attack_weapon.attributes["ap_cost"]
+				damage = attack_weapon.attributes["dpa"]		
+				io.out('You are attacking with {}, base damage of {} dealt.'.format(attack_weapon, damage))
+
+				crit_chance = ((self.get_stat("luck") * 0.01) * attack_weapon.attributes["crit_chance"]) + 0.15
+
+				if random.random() < crit_chance:
+					damage += attack_weapon.attributes["crit_damage"]
+					io.out("This is a critical hit! You are now dishing out {} damage points.".format(damage))
+
+				break
+
+			body_part = random.choice(victim.body_parts)
+			io.out('You have struck the {} of the {}.'.format(body_part, victim))
+
+			victim.attack_receive(self, body_part, damage)
+
+			if victim.get_hp() <= 0:
+				io.out('You killed {}.'.format(victim))
+				return
+
+			victim.attack_send(self)
 
 
 class Creature(Entity):
-	def __init__(self, hp, ap, name = None):
-		Entity.__init__(self, name = name)
+	def __init__(self, hp, meelee, level = 1, body_parts = None, name = None):
+		Entity.__init__(self, level = level, body_parts = body_parts, name = name)
 		self.hp = hp
-		self.ap = ap
+		self.meelee = meelee
 		pass
 
 	def get_hp(self):
 		return self.hp
 
 	def get_ap(self):
-		return self.ap
+		return self.ap	
+
+	def attack_send(self, victim):
+		damage = self.meelee
+		max_dpa = 0
+
+		for weapon in self.equipped:
+			if not isinstance(weapon, Weapon):
+				continue
+
+			if weapon.attributes["dpa"] > max_dpa:
+				max_dpa = weapon.attributes["dpa"]
+
+		damage += max_dpa
+
+		body_part = random.choice(victim.body_parts)
+		victim.attack_receive(self, body_part, damage)

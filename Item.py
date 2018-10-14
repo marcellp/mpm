@@ -22,14 +22,14 @@ class Item(object):
         return self.name
 
     def describe(self):
-        print(self.name,
+        io.out(self.name,
               "\n\tDescription: ",self.desc,
               "\n\tValue: ",self.value,
               "\n\tWeight: ",self.weight,)
 
         if self.attributes:
             for attr in self.attributes:
-                print("\t", attr, ": ", self.attributes[attr])
+                io.out("\t", attr, ": ", self.attributes[attr])
 
     def use(self,user):
         if user.local_player:
@@ -37,7 +37,7 @@ class Item(object):
             return True
 
     def __eq__(self, other):
-        return self.__dict__ == other.__dict__
+        return other and (self.__dict__ == other.__dict__)
 
 
 class Weapon(Item):
@@ -51,8 +51,7 @@ class Weapon(Item):
         self.attributes = weaponJson["attributes"]
 
     def use(self,user):
-
-        if not user.equipped["right hand"]:
+        if not user.equipped["right hand"] and user.part_damage["right hand"] <= user.get_hp():
             user.equipped["right hand"] = self
 
             if user.local_player:
@@ -60,7 +59,7 @@ class Weapon(Item):
 
             return True
 
-        elif not user.equipped["left hand"]:
+        elif not user.equipped["left hand"] and user.part_damage["left hand"] <= user.get_hp():
             user.equipped["left hand"] = self
 
             if user.local_player:
@@ -69,7 +68,7 @@ class Weapon(Item):
             return True
 
         else:
-            io.out('You do not have more hands to hold the {}'.format(self.name))
+            io.out('You do not have more (intact) hands to hold the {}'.format(self.name))
             return False
 
 class Clothing(Item):

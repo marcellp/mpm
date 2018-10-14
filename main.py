@@ -33,7 +33,6 @@ class Game(object):
                 room.interior = room_data["interior"]
                 room.items = room_data["items"]
                 room.entities = [self.get_entity(entity) for entity in room_data["entities"]]
-                print(room.entities)
                 room.paths = room_data["exits"]
 
                 room_dict[room_data["name"]] = room
@@ -61,10 +60,10 @@ class Game(object):
             raw_file_data = json.load(f)
 
         for entity in raw_file_data:
-            temp = Creature(name = entity["name"], hp = entity["hp"], ap = entity["stamina"])
+            temp = Creature(name = entity["name"], hp = entity["hp"], meelee = entity["meelee"], level = entity["level"], body_parts = entity.get("body_parts"))
             for item in entity["inventory"]:
                 temp.add_item(self.get_item(item))
-            temp.equipped = entity["equipped"]
+            #temp.equipped = entity["equipped"]
 
             self.entities[entity["name"]] = temp
 
@@ -175,8 +174,11 @@ class Game(object):
 
         while True:
             words = io.send_in()
-            self.parser.parse(words)
+            if not self.parser.parse(words):
+            	break
 
+            if self.p.get_hp() <= 0:
+            	break
 
 g = Game()
 

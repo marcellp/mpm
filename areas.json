@@ -14,7 +14,7 @@
 		"desc" : "You leave the morgue and find yourself in a long corridor. There is a window to your left and a door at the far end, however a strange-looking man blocks your way to the door. His back is turned, and he doesn't seem to have seen you yet.",
 		"interior" : true,
 		"items" : [],
-		"entities" : ["bandit"],
+		"entities" : ["ghoul"],
 		"exits" : {
 			"morgue door" : "morgue",
 			"window" : "rooftop",
@@ -36,7 +36,7 @@
 		"desc" : "You find yourself at the top of a stairwell. The door slams behind you a little louder than you planned... There is an elevator next to the stairs, but the door has been forced open, and now leads into an empty elevator shaft. There is a ladder on the far side of the shaft, leading down, but it doesn't look very safe.",
 		"interior" : true,
 		"items" : [],
-		"entities" : [],
+		"entities" : ["bloodbug"],
 		"exits" : {
 			"corridor door" : "corridor",
 			"ladder" : "basement",
@@ -56,16 +56,6 @@
 	{
 		"name" : "ground floor",
 		"desc" : "placeholder",
-		"interior" : true,
-		"items" : [],
-		"entities" : [],
-		"exits" : {
-			
-		}
-	},
-	{
-		"name" : "template",
-		"desc" : "",
 		"interior" : true,
 		"items" : [],
 		"entities" : [],

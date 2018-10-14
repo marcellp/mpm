@@ -1,10 +1,21 @@
 
 [
   {
-    "name":"bandit",
-    "hp":50,
-    "stamina":50,
+    "name":"ghoul",
+    "level":6,
+    "hp":15,
+    "meelee":16,
     "inventory":["Baseball bat"],
+    "equipped":{"right hand":"Baseball bat","head":null, "torso":null,"left leg":null,
+                "right leg":null, "right arm":null,"left arms":null}
+  },
+  {
+    "name":"bloodbug",
+    "level": 10,
+    "hp": 120,
+    "meelee": 25,
+    "body_parts": ["head", "thorax", "abdomen"],
+    "inventory": ["Baseball bat"],
     "equipped":{"right hand":"Baseball bat","head":null, "torso":null,"left leg":null,
                 "right leg":null, "right arm":null,"left arms":null}
   }
